@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<!-- saved from url=(0032)https://ak-ioi.com/apps/oi-2048/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        
+        <title>AK IOI</title>
+        <link href="./AK IOI_files/main.css" rel="stylesheet" type="text/css" encoding="utf-8">
+        <link href="./AK IOI_files/ai.css" rel="stylesheet" type="text/css">
+        <link href="./AK IOI_files/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="https://ak-ioi.com/apps/oi-2048/favicon.ico">
+        <script async="" src="./AK IOI_files/analytics.js.下载"></script><script src="./AK IOI_files/jquery.min.js.下载"></script>
+        <meta name="HandheldFriendly" content="True">
+        <meta name="MobileOptimized" content="320">
+        <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+        <meta property="og:title" content="AK IOI 游戏">
+        <meta property="og:site_name" content="AK IOI 游戏">
+        <meta property="og:description" content="合并评测状态并获得AK！警告：该游戏非常容易上瘾">
+        <meta property="og:image" content="http://gabrielecirulli.github.io/2048/meta/og_image.png">
+        <style>
+        .game-container {
+            touch-action: none;
+        }
+        </style>
+    </head>
+    
+    <body>
+        <div class="mobile-top"></div>
+        <div class="container">
+            <div class="game-explanation game-list" style="pointer-events:none;position:absolute;padding-left:540px;padding-top:128px;">
+                <table class="status-list">
+                    <style>.status-list th,.status-list td{text-align:left;padding:4px;}</style>
+                    <tbody><tr>
+                        <th>评测状态</th>
+                        <th>数值</th>
+                    </tr>
+                    <tr>
+                        <td><span class="tile tile-2 example">CE</span><span class="game-list-label"><strong>C</strong>ompile <strong>E</strong>rror</span></td>
+                        <td>2</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tile tile-4 example"><i class="fa fa-spin fa-circle-o-notch"></i></span><span class="game-list-label">Judging</span></td>
+                        <td>4</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tile tile-8 example">RE</span><span class="game-list-label"><strong>R</strong>untime <strong>E</strong>rror</span></td>
+                        <td>8</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tile tile-16 example">TLE</span><span class="game-list-label"><strong>T</strong>ime <strong>L</strong>imit <strong>E</strong>xceeded</span></td>
+                        <td>16</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tile tile-32 example">MLE</span><span class="game-list-label"><strong>M</strong>emory <strong>L</strong>imit <strong>E</strong>xceeded</span></td>
+                        <td>32</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tile tile-64 example">ILE</span><span class="game-list-label"><strong>I</strong>dleness <strong>L</strong>imit <strong>E</strong>xceeded</span></td>
+                        <td>64</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tile tile-128 example">OLE</span><span class="game-list-label"><strong>O</strong>utput <strong>L</strong>imit <strong>E</strong>xceeded</span></td>
+                        <td>128</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tile tile-256 example">UKE</span><span class="game-list-label"><strong>U</strong>n<strong>K</strong>nown <strong>E</strong>rror</span></td>
+                        <td>256</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tile tile-512 example">WA</span><span class="game-list-label"><strong>W</strong>rong <strong>A</strong>nswer</span></td>
+                        <td>512</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tile tile-1024 example">PC</span><span class="game-list-label"><strong>P</strong>artially <strong>C</strong>orrect</span></td>
+                        <td>1024</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tile tile-2048 example">AC</span><span class="game-list-label"><strong>AC</strong>cepted</span></td>
+                        <td>2048</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tile tile-4096 example">PE</span><span class="game-list-label"><strong>P</strong>resentation <strong>E</strong>rror</span></td>
+                        <td>4096</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tile tile-8192 example">DoJ</span><span class="game-list-label"><strong>D</strong>enial <strong>o</strong>f <strong>J</strong>udging</span></td>
+                        <td>8192</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tile tile-16384 example">SJE</span><span class="game-list-label"><strong>S</strong>pecial <strong>J</strong>udge <strong>E</strong>rror</span></td>
+                        <td>16384</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tile tile-32768 example">AU</span><span class="game-list-label"><strong>AU</strong></span></td>
+                        <td>32768</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tile tile-65536 example">AK</span><span class="game-list-label"><strong>AK</strong></span></td>
+                        <td>65536</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tile tile--1 example">#</span><span class="game-list-label"><strong>#</strong>pragma ...</span></td>
+                        <td>×1</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tile tile--2 example">O2</span><span class="game-list-label">-<strong>O2</strong></span></td>
+                        <td>×2</td>
+                    </tr>
+                    <tr>
+                        <td><span class="tile tile--4 example">O3</span><span class="game-list-label">-<strong>O3</strong></span></td>
+                        <td>×4</td>
+                    </tr>
+                </tbody></table>
+            </div>
+            <div class="heading">
+                 <h1 class="title">akioi</h1>
+
+                <div style="float:right">
+                  <div class="score-container">0</div>
+                  <div class="best-container">0</div>
+                </div>
+            </div>
+            <p class="game-intro">合并评测状态并得到<strong>AK</strong>！
+                <a class="restart-button" style="float:right;">回卢重造</a>
+            </p>
+            <div class="controls">
+                <div id="hint-button-container">
+                    <button id="hint-button" class="ai-button">获得提示</button>
+                </div>
+                <div id="feedback-container" href="javascript:void(0)" onclick="document.querySelector(&#39;#feedback-container&#39;).innerHTML=&#39;&#39;;"></div>
+                <div id="run-button-container">
+                    <button id="run-button" class="ai-button">手动模式</button>
+                </div>
+            </div>
+            <div class="game-container">
+                <div class="game-message">
+                    <p></p>
+                    <div class="lower">
+                        <a class="retry-button">重玩</a>
+                        <a class="score-sharing">提交成绩</a>
+                    </div>
+                </div>
+                <div class="grid-container">
+                    <div class="grid-row">
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                    </div>
+                    <div class="grid-row">
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                    </div>
+                    <div class="grid-row">
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                    </div>
+                    <div class="grid-row">
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                        <div class="grid-cell"></div>
+                    </div>
+                </div>
+                <div class="tile-container"><div class="tile tile-2 tile-position-3-2 tile-new">CE</div><div class="tile tile-2 tile-position-4-2 tile-new">CE</div></div>
+            </div>
+            <p class="game-explanation"> <strong class="important">玩法：</strong>使用<strong>方向键 或 手指划屏</strong>的方式移动方块。当相同状态的方块相撞，<strong>它们会合并成两倍数值的方块。</strong><a href="https://ak-ioi.com/apps/oi-2048/wiki/" target="_blank">详细信息</a>
+            </p>
+            <p>相关游戏：<a href="https://2048game.com/" target="_blank">原版2048</a> <a href="https://dimit.me/Fe26/index_zh_CN.html" target="_blank">死铁</a></p>
+            <p style="margin-top:8px;display:none;" class="game-explanation" id="getfixed"> <strong class="important">提示：</strong>iOS设备的滚动锁定功能存在问题。你可以<a href="javascript:void(0)" onclick="document.querySelector(&#39;html&#39;).style.position=&#39;fixed&#39;;">禁止滚动</a> 以获得更好的游戏体验。
+            </p>
+            <p>大家清楚这玩意不值得被做成 C/S 形式的游戏。请个别成绩提交者耗子尾汁，好好反思，以后不要再犯这样的聪明。</p>
+            <h2><center>排行榜</center></h2>
+            <p style="margin-top:-8px;"></p><center>60天内的前100名&nbsp;<a href="javascript:void()" onclick="showrank()">刷新</a></center><p></p>
+            <p class="ranklist-show-area" style="margin-bottom: 300px;"><style>
+.user-ranklist {
+    width:100%;
+    margin-bottom:220px;
+}
+.user-rankhead {
+    text-align: left;
+}
+.rk-rk {
+    width:30px;
+}
+.rk-username {
+    /*width:calc(100%-250px);*/
+}
+.rk-score {
+    width:100px;
+    text-align: right;
+}
+.rk-date {
+    width:120px;
+    text-align: right;
+}
+@media screen and (max-width: 480px) {
+    .rk-date {
+        display:none;
+    }
+}
+</style>
+<table class="user-ranklist">
+    <tbody><tr>
+        <th class="user-rankhead rk-rk">#</th>
+        <th class="user-rankhead rk-username">用户名</th>
+        <th class="user-rankhead rk-score">分数</th>
+        <th class="user-rankhead rk-date">提交日期</th>
+    </tr>
+
+    <tr>
+        <td class="rk-rk">1</td>
+        <td class="rk-username">
+            <span class="tile tile-65536 example">AK</span>HACK_AK_IOI        </td>
+        <td class="rk-score">
+            E            <a href="javascript:void()" onclick="showinfo(&#39;0.143848959641982571.3901715230257628&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/07/14</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">2</td>
+        <td class="rk-username">
+            <span class="tile tile-128 example">OLE</span>test        </td>
+        <td class="rk-score">
+            E            <a href="javascript:void()" onclick="showinfo(&#39;0.229217995562630670.4175508820526318&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/07/13</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">3</td>
+        <td class="rk-username">
+            <span class="tile tile-128 example">OLE</span>Karry_AK_ssh        </td>
+        <td class="rk-score">
+            E            <a href="javascript:void()" onclick="showinfo(&#39;0.134265307323424120.003568438624689585&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/07/15</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">4</td>
+        <td class="rk-username">
+            <span class="tile tile-65536 example">AK</span>I_Am_Hacker        </td>
+        <td class="rk-score">
+            E            <a href="javascript:void()" onclick="showinfo(&#39;0.53548727625785290.4021317753276308&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/05/27</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">5</td>
+        <td class="rk-username">
+            <span class="tile tile-65536 example">AK</span>SSAI_02        </td>
+        <td class="rk-score">
+            E            <a href="javascript:void()" onclick="showinfo(&#39;0.239848918961982570.3901728552027628&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/13</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">6</td>
+        <td class="rk-username">
+            <span class="tile tile-65536 example">AK</span>ZX_AK_IOI        </td>
+        <td class="rk-score">
+            2022920            <a href="javascript:void()" onclick="showinfo(&#39;0.1939550189638810.05389422017561207&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/05</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">7</td>
+        <td class="rk-username">
+            <span class="tile tile-65536 example">AK</span>Stanley_S        </td>
+        <td class="rk-score">
+            1901443            <a href="javascript:void()" onclick="showinfo(&#39;0.143848959641982570.3901715230257628&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/14</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">8</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>BZOI_DBH_AKIOI        </td>
+        <td class="rk-score">
+            1528542            <a href="javascript:void()" onclick="showinfo(&#39;0.481450671760174750.9126856791095763&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/04</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">9</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>bzwd_xsz        </td>
+        <td class="rk-score">
+            1514158            <a href="javascript:void()" onclick="showinfo(&#39;0.198553265418474960.8225729894567646&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/16</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">10</td>
+        <td class="rk-username">
+            <span class="tile tile-65536 example">AK</span>ZX_AKIOI        </td>
+        <td class="rk-score">
+            1459882            <a href="javascript:void()" onclick="showinfo(&#39;0.328363351399630240.27776119042867986&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/03</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">11</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>BZOI_DBH_DB_ZX        </td>
+        <td class="rk-score">
+            1387224            <a href="javascript:void()" onclick="showinfo(&#39;0.9803030008183740.2207077769222323&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/06</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">12</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>FLY        </td>
+        <td class="rk-score">
+            1369774            <a href="javascript:void()" onclick="showinfo(&#39;0.63971174116702610.8202432965563677&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/07</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">13</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>BZOI_XSZ_ZC        </td>
+        <td class="rk-score">
+            1252642            <a href="javascript:void()" onclick="showinfo(&#39;0.107039519799044580.8829073898807474&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/03</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">14</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>FENGJIECHAO_08        </td>
+        <td class="rk-score">
+            1193602            <a href="javascript:void()" onclick="showinfo(&#39;0.6182704839600370.7205562851900102&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/05/23</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">15</td>
+        <td class="rk-username">
+            <span class="tile tile-65536 example">AK</span>lx_love_gyt        </td>
+        <td class="rk-score">
+            1172620            <a href="javascript:void()" onclick="showinfo(&#39;0.62671355293284070.09753679562312145&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/25</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">16</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>swords2020        </td>
+        <td class="rk-score">
+            1167074            <a href="javascript:void()" onclick="showinfo(&#39;0.76838443752857220.05615705696702089&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/22</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">17</td>
+        <td class="rk-username">
+            <span class="tile tile-65536 example">AK</span>zx31        </td>
+        <td class="rk-score">
+            1145162            <a href="javascript:void()" onclick="showinfo(&#39;0.90933067730775250.04109947202499198&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/04</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">18</td>
+        <td class="rk-username">
+            <span class="tile tile-65536 example">AK</span>7_5_somebody        </td>
+        <td class="rk-score">
+            1135064            <a href="javascript:void()" onclick="showinfo(&#39;0.99028827007737050.990279967510389&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/15</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">19</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>DBH_LOVE_WSL        </td>
+        <td class="rk-score">
+            1132660            <a href="javascript:void()" onclick="showinfo(&#39;0.8711517890450240.6655678114811223&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/11</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">20</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>Nick2008        </td>
+        <td class="rk-score">
+            1110724            <a href="javascript:void()" onclick="showinfo(&#39;0.97724926620259320.8177900825305446&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/05/23</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">21</td>
+        <td class="rk-username">
+            <span class="tile tile-65536 example">AK</span>DIU        </td>
+        <td class="rk-score">
+            1094528            <a href="javascript:void()" onclick="showinfo(&#39;0.84063750049239030.5380613857775784&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/05/18</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">22</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>swords2011        </td>
+        <td class="rk-score">
+            1034228            <a href="javascript:void()" onclick="showinfo(&#39;0.34985094719939290.25249361038144225&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/12</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">23</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>swords2010        </td>
+        <td class="rk-score">
+            1015686            <a href="javascript:void()" onclick="showinfo(&#39;0.196244088223215370.3071117023348162&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/12</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">24</td>
+        <td class="rk-username">
+            <span class="tile tile-65536 example">AK</span>ztcakuoi        </td>
+        <td class="rk-score">
+            982056            <a href="javascript:void()" onclick="showinfo(&#39;0.71321158569219190.8159727511842747&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/11</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">25</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>ter_Stegen_FJC        </td>
+        <td class="rk-score">
+            970060            <a href="javascript:void()" onclick="showinfo(&#39;0.407293269286582050.8560204248883392&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/12</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">26</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>Sakura_Kiss        </td>
+        <td class="rk-score">
+            948930            <a href="javascript:void()" onclick="showinfo(&#39;0.70027369836967980.11444641832743474&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/11</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">27</td>
+        <td class="rk-username">
+            <span class="tile tile-65536 example">AK</span>swords2021        </td>
+        <td class="rk-score">
+            934534            <a href="javascript:void()" onclick="showinfo(&#39;0.69459553096951670.606986579728193&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/05/19</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">28</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>Kun_Aguero_FJC        </td>
+        <td class="rk-score">
+            932136            <a href="javascript:void()" onclick="showinfo(&#39;0.71493520771747510.5058861298873856&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/06</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">29</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>Leo_Messi_FJC        </td>
+        <td class="rk-score">
+            856080            <a href="javascript:void()" onclick="showinfo(&#39;0.89369930120351440.9527958340079499&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/05/28</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">30</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>123456zmy        </td>
+        <td class="rk-score">
+            811632            <a href="javascript:void()" onclick="showinfo(&#39;0.56904005844448810.33414254991334924&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/09</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">31</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>I_love_SYJ        </td>
+        <td class="rk-score">
+            803812            <a href="javascript:void()" onclick="showinfo(&#39;0.480289925938163660.20519195488037933&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/08</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">32</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>swords2002        </td>
+        <td class="rk-score">
+            758242            <a href="javascript:void()" onclick="showinfo(&#39;0.94721440201411370.0892915418103487&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/27</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">33</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>zx27        </td>
+        <td class="rk-score">
+            744896            <a href="javascript:void()" onclick="showinfo(&#39;0.4585836799326630.1626972767053474&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/05/26</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">34</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>swords2014        </td>
+        <td class="rk-score">
+            728788            <a href="javascript:void()" onclick="showinfo(&#39;0.56012594271240360.25498697584158303&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/05</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">35</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>swords2007        </td>
+        <td class="rk-score">
+            725854            <a href="javascript:void()" onclick="showinfo(&#39;0.0280965853841592670.21202849041320648&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/14</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">36</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>QwQcOrZ        </td>
+        <td class="rk-score">
+            689432            <a href="javascript:void()" onclick="showinfo(&#39;0.78602563514339610.45102874593406095&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/05/30</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">37</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>swords2005        </td>
+        <td class="rk-score">
+            672924            <a href="javascript:void()" onclick="showinfo(&#39;0.50751375389317880.8716578605539727&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/19</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">38</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>swords2006        </td>
+        <td class="rk-score">
+            671778            <a href="javascript:void()" onclick="showinfo(&#39;0.6945215847303290.06914854986067387&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/15</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">39</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>Z_X        </td>
+        <td class="rk-score">
+            661816            <a href="javascript:void()" onclick="showinfo(&#39;0.50378416208267730.7953794112139425&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/05/23</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">40</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>diu1        </td>
+        <td class="rk-score">
+            656602            <a href="javascript:void()" onclick="showinfo(&#39;0.70801272035713890.11732349762909289&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/13</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">41</td>
+        <td class="rk-username">
+            <span class="tile tile-65536 example">AK</span>SpeMars        </td>
+        <td class="rk-score">
+            636298            <a href="javascript:void()" onclick="showinfo(&#39;0.51121523710347420.22140972073814513&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/04</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">42</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>_24_37_        </td>
+        <td class="rk-score">
+            630574            <a href="javascript:void()" onclick="showinfo(&#39;0.256183766125672950.9301771858173156&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/09</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">43</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>ZengX        </td>
+        <td class="rk-score">
+            630328            <a href="javascript:void()" onclick="showinfo(&#39;0.67210490788422120.7246062400094064&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/05/19</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">44</td>
+        <td class="rk-username">
+            <span class="tile tile-65536 example">AK</span>SpeMars2        </td>
+        <td class="rk-score">
+            630014            <a href="javascript:void()" onclick="showinfo(&#39;0.227540510407000070.18667538105618453&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/08</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">45</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>SpeMars4        </td>
+        <td class="rk-score">
+            612420            <a href="javascript:void()" onclick="showinfo(&#39;0.086262621796911130.07502867109272948&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/11</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">46</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>zx24        </td>
+        <td class="rk-score">
+            601930            <a href="javascript:void()" onclick="showinfo(&#39;0.32536442462343660.16727010441326584&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/05/24</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">47</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>Fly        </td>
+        <td class="rk-score">
+            596004            <a href="javascript:void()" onclick="showinfo(&#39;0.85892333287848620.38063243322578555&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/06</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">48</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>swords2004        </td>
+        <td class="rk-score">
+            575354            <a href="javascript:void()" onclick="showinfo(&#39;0.33825836374309490.08304400475179685&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/19</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">49</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>_ZX        </td>
+        <td class="rk-score">
+            561430            <a href="javascript:void()" onclick="showinfo(&#39;0.53915589770658980.03783688433554899&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/05/20</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">50</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>sworfs2007        </td>
+        <td class="rk-score">
+            559108            <a href="javascript:void()" onclick="showinfo(&#39;0.82073048129054320.36037709159391407&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/14</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">51</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>FENGJIECHAO_05        </td>
+        <td class="rk-score">
+            556480            <a href="javascript:void()" onclick="showinfo(&#39;0.33090244043790150.3969920533705176&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/05/19</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">52</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>BZOI_DBH_7        </td>
+        <td class="rk-score">
+            537752            <a href="javascript:void()" onclick="showinfo(&#39;0.71429734298823020.4069326442629144&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/05/28</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">53</td>
+        <td class="rk-username">
+            <span class="tile tile-65536 example">AK</span>FENGJIECHAO_06        </td>
+        <td class="rk-score">
+            536834            <a href="javascript:void()" onclick="showinfo(&#39;0.159881757869683170.24855567344652396&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/05/20</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">54</td>
+        <td class="rk-username">
+            <span class="tile tile-65536 example">AK</span>BZOI_DBH_4        </td>
+        <td class="rk-score">
+            534004            <a href="javascript:void()" onclick="showinfo(&#39;0.287968865439001130.02565519179462039&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/05/22</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">55</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>swords2013        </td>
+        <td class="rk-score">
+            528140            <a href="javascript:void()" onclick="showinfo(&#39;0.276830758280469440.1454168637077885&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/05</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">56</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>diu        </td>
+        <td class="rk-score">
+            524118            <a href="javascript:void()" onclick="showinfo(&#39;0.61918818427346790.1265861663030161&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/05</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">57</td>
+        <td class="rk-username">
+            <span class="tile tile-65536 example">AK</span>swords2018        </td>
+        <td class="rk-score">
+            516314            <a href="javascript:void()" onclick="showinfo(&#39;0.81426485513912260.005904448619478919&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/02</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">58</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>zx22        </td>
+        <td class="rk-score">
+            515748            <a href="javascript:void()" onclick="showinfo(&#39;0.87412914269890310.47701429887865765&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/05/23</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">59</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>swords2003        </td>
+        <td class="rk-score">
+            506208            <a href="javascript:void()" onclick="showinfo(&#39;0.28854288633737490.7872262752500683&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/22</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">60</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>Fly_494974        </td>
+        <td class="rk-score">
+            494974            <a href="javascript:void()" onclick="showinfo(&#39;0.38690750038738340.03222290577516396&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/08</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">61</td>
+        <td class="rk-username">
+            <span class="tile tile-16384 example">SJE</span>Fly_SJE        </td>
+        <td class="rk-score">
+            487192            <a href="javascript:void()" onclick="showinfo(&#39;0.66744405725101360.6043925309472538&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/12</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">62</td>
+        <td class="rk-username">
+            <span class="tile tile-65536 example">AK</span>BZOI_DBH_5        </td>
+        <td class="rk-score">
+            476926            <a href="javascript:void()" onclick="showinfo(&#39;0.52019075368053240.40074707317259994&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/05/23</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">63</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>FENGJIECHAO_07        </td>
+        <td class="rk-score">
+            465274            <a href="javascript:void()" onclick="showinfo(&#39;0.235922210630418850.26019871928887595&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/05/20</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">64</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>DBH_fuck_WSL        </td>
+        <td class="rk-score">
+            458652            <a href="javascript:void()" onclick="showinfo(&#39;0.28256662479844930.39177815863278886&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/05/30</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">65</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>swords2015        </td>
+        <td class="rk-score">
+            456740            <a href="javascript:void()" onclick="showinfo(&#39;0.331903539180863570.9954635017796942&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/04</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">66</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>swords2017        </td>
+        <td class="rk-score">
+            442374            <a href="javascript:void()" onclick="showinfo(&#39;0.16974107684926710.4839883464756799&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/03</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">67</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>swords2009        </td>
+        <td class="rk-score">
+            432640            <a href="javascript:void()" onclick="showinfo(&#39;0.41899191315207030.6177657854319004&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/13</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">68</td>
+        <td class="rk-username">
+            <span class="tile tile-65536 example">AK</span>SSAI_05        </td>
+        <td class="rk-score">
+            410372            <a href="javascript:void()" onclick="showinfo(&#39;0.05559010569716660.5228837986234214&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/22</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">69</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>SpeMars3        </td>
+        <td class="rk-score">
+            404946            <a href="javascript:void()" onclick="showinfo(&#39;0.87484415295400740.2915985014213738&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/11</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">70</td>
+        <td class="rk-username">
+            <span class="tile tile-65536 example">AK</span>I_AK_IOI        </td>
+        <td class="rk-score">
+            402430            <a href="javascript:void()" onclick="showinfo(&#39;0.42661464338382760.008993370436835901&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/07/16</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">71</td>
+        <td class="rk-username">
+            <span class="tile tile-65536 example">AK</span>LPY_kiss_YH        </td>
+        <td class="rk-score">
+            399278            <a href="javascript:void()" onclick="showinfo(&#39;0.151961062453672020.7394471693650086&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/01</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">72</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>swords2019        </td>
+        <td class="rk-score">
+            387628            <a href="javascript:void()" onclick="showinfo(&#39;0.65246769484296110.8112107118974003&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/02</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">73</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>BZOI_DBH_9        </td>
+        <td class="rk-score">
+            386650            <a href="javascript:void()" onclick="showinfo(&#39;0.60882543504280130.5956069414560168&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/05</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">74</td>
+        <td class="rk-username">
+            <span class="tile tile-65536 example">AK</span>diu2        </td>
+        <td class="rk-score">
+            378924            <a href="javascript:void()" onclick="showinfo(&#39;0.80051838421600420.3534820907207217&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/08</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">75</td>
+        <td class="rk-username">
+            <span class="tile tile-8192 example">DoJ</span>Flyyy        </td>
+        <td class="rk-score">
+            375808            <a href="javascript:void()" onclick="showinfo(&#39;0.81155224409574680.04134002692065741&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/07</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">76</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>Jair314        </td>
+        <td class="rk-score">
+            356570            <a href="javascript:void()" onclick="showinfo(&#39;0.40105788455493750.3924724674721678&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/07/12</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">77</td>
+        <td class="rk-username">
+            <span class="tile tile-65536 example">AK</span>DBH_kiss_WSL        </td>
+        <td class="rk-score">
+            350850            <a href="javascript:void()" onclick="showinfo(&#39;0.58895108569330360.9191944590922201&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/05/28</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">78</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>riker1        </td>
+        <td class="rk-score">
+            346368            <a href="javascript:void()" onclick="showinfo(&#39;0.84902301201079620.3349438976939023&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/20</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">79</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>Fly_er        </td>
+        <td class="rk-score">
+            337002            <a href="javascript:void()" onclick="showinfo(&#39;0.71572142487200870.8347468057828067&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/19</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">80</td>
+        <td class="rk-username">
+            <span class="tile tile-65536 example">AK</span>swords2012        </td>
+        <td class="rk-score">
+            336438            <a href="javascript:void()" onclick="showinfo(&#39;0.377721466223585270.025978228559682237&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/10</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">81</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>ljm3        </td>
+        <td class="rk-score">
+            333702            <a href="javascript:void()" onclick="showinfo(&#39;0.76035169802945140.18653452712012075&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/12</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">82</td>
+        <td class="rk-username">
+            <span class="tile tile-16384 example">SJE</span>abyss        </td>
+        <td class="rk-score">
+            329460            <a href="javascript:void()" onclick="showinfo(&#39;0.216601549120653880.47171741495965924&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/07/01</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">83</td>
+        <td class="rk-username">
+            <span class="tile tile-65536 example">AK</span>akioi        </td>
+        <td class="rk-score">
+            322900            <a href="javascript:void()" onclick="showinfo(&#39;0.174747962960922320.022865643823752446&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/07/12</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">84</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>ljm1        </td>
+        <td class="rk-score">
+            318506            <a href="javascript:void()" onclick="showinfo(&#39;0.25110092888487480.1449070042773105&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/05/19</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">85</td>
+        <td class="rk-username">
+            <span class="tile tile-65536 example">AK</span>I_love_LSX_7_5        </td>
+        <td class="rk-score">
+            315132            <a href="javascript:void()" onclick="showinfo(&#39;0.32294078099057930.35319250978016736&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/05/26</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">86</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>DBH_love_WSL        </td>
+        <td class="rk-score">
+            308544            <a href="javascript:void()" onclick="showinfo(&#39;0.88493490868985550.8684621879673184&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/05/26</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">87</td>
+        <td class="rk-username">
+            <span class="tile tile-16384 example">SJE</span>dbh_is_dsdhy        </td>
+        <td class="rk-score">
+            297834            <a href="javascript:void()" onclick="showinfo(&#39;0.99292110307789680.916858177083036&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/07/14</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">88</td>
+        <td class="rk-username">
+            <span class="tile tile-65536 example">AK</span>FJC_help_LXAK        </td>
+        <td class="rk-score">
+            294306            <a href="javascript:void()" onclick="showinfo(&#39;0.247224582093176880.24646144606793374&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/17</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">89</td>
+        <td class="rk-username">
+            <span class="tile tile-65536 example">AK</span>wjcwjc        </td>
+        <td class="rk-score">
+            289192            <a href="javascript:void()" onclick="showinfo(&#39;0.7835523550679870.3830960482747374&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/09</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">90</td>
+        <td class="rk-username">
+            <span class="tile tile-65536 example">AK</span>114514        </td>
+        <td class="rk-score">
+            283470            <a href="javascript:void()" onclick="showinfo(&#39;0.88685048601640770.6354011213363122&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/04</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">91</td>
+        <td class="rk-username">
+            <span class="tile tile-16384 example">SJE</span>Hello_World        </td>
+        <td class="rk-score">
+            283114            <a href="javascript:void()" onclick="showinfo(&#39;0.3226221720879410.7140959250002015&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/07/14</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">92</td>
+        <td class="rk-username">
+            <span class="tile tile-16384 example">SJE</span>spemars        </td>
+        <td class="rk-score">
+            277926            <a href="javascript:void()" onclick="showinfo(&#39;0.273704360911760650.3606852951594599&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/08</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">93</td>
+        <td class="rk-username">
+            <span class="tile tile-8192 example">DoJ</span>bzoi_hyx_dad        </td>
+        <td class="rk-score">
+            273342            <a href="javascript:void()" onclick="showinfo(&#39;0.87459717259598470.3072105544768413&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/05/22</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">94</td>
+        <td class="rk-username">
+            <span class="tile tile-65536 example">AK</span>hello        </td>
+        <td class="rk-score">
+            271554            <a href="javascript:void()" onclick="showinfo(&#39;0.335976391975687740.33960355117272&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/14</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">95</td>
+        <td class="rk-username">
+            <span class="tile tile-65536 example">AK</span>BZOI_DBH_6        </td>
+        <td class="rk-score">
+            268514            <a href="javascript:void()" onclick="showinfo(&#39;0.35648517284071170.32270684841944286&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/05/27</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">96</td>
+        <td class="rk-username">
+            <span class="tile tile-16384 example">SJE</span>BZOI_DBH_AFO        </td>
+        <td class="rk-score">
+            259948            <a href="javascript:void()" onclick="showinfo(&#39;0.213964797179105660.4377356677121105&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/13</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">97</td>
+        <td class="rk-username">
+            <span class="tile tile-65536 example">AK</span>zx        </td>
+        <td class="rk-score">
+            253472            <a href="javascript:void()" onclick="showinfo(&#39;0.230158046857621420.3252825449489589&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/05/18</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">98</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>bzoi_ljm        </td>
+        <td class="rk-score">
+            252254            <a href="javascript:void()" onclick="showinfo(&#39;0.26276695252660640.9033120567553866&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/13</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">99</td>
+        <td class="rk-username">
+            <span class="tile tile-32768 example">AU</span>FLY_        </td>
+        <td class="rk-score">
+            251556            <a href="javascript:void()" onclick="showinfo(&#39;0.132388761400474180.7700139513151198&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/08</td>
+    </tr>
+
+
+    <tr>
+        <td class="rk-rk">100</td>
+        <td class="rk-username">
+            <span class="tile tile-65536 example">AK</span>09        </td>
+        <td class="rk-score">
+            214114            <a href="javascript:void()" onclick="showinfo(&#39;0.5431209383225280.7081479231498744&#39;)" title="显示详情">#</a>
+        </td>
+        <td class="rk-date">2021/06/30</td>
+    </tr>
+
+
+</tbody></table>
+
+</p>
+            <script>
+                var rank_is_loading = false;
+                function showrank() {
+                    if(rank_is_loading) return;
+                    rank_is_loading = true;
+                    $showbox = $('.ranklist-show-area');
+                    $showbox.html('正在加载...');
+                    $.ajax({
+                        type: "GET",
+                        cache: false,
+                        url: "data/ranklist.php",
+                        dataType: "text",
+                        error: function(e) {
+                            console.log('排行加载失败：',e);
+                            $showbox.html('加载失败');
+                            rank_is_loading=false;
+                        },
+                        success: function(e) {
+                            $showbox.html(e);
+                            rank_is_loading=false;
+                        }
+                    });
+                }
+                showrank();
+                function hideinfo() {
+                    $('.ranklist-info').css('display','none');
+                }
+                function hideann() {
+                    $('.ann-info').css('display','none');
+                }
+                function showinfo(id) {
+                    $area = $('.info-code');
+                    $box = $('.ranklist-info');
+                    $.ajax({
+                        type: "GET",
+                        cache: false,
+                        url: "data/get_info.php?gameid="+id,
+                        dataType: "text",
+                        error: function(e) {
+                            console.log('详情加载失败：',e);
+                            $area.html('加载失败');
+                            $box.css('display','block');
+                        },
+                        success: function(e) {
+                            $area.html(e);
+                            $box.css('display','block');
+                        }
+                    });
+                }
+                function showann(id) {
+                    $area = $('.ann-code');
+                    $box = $('.ann-info');
+                    $.ajax({
+                        type: "GET",
+                        cache: false,
+                        url: "skip-announcement/"+id+".txt",
+                        dataType: "text",
+                        error: function(e) {
+                            console.log('详情加载失败：',e);
+                            $area.html('加载失败');
+                            $box.css('display','block');
+                        },
+                        success: function(e) {
+                            $area.html(e);
+                            $box.css('display','block');
+                        }
+                    });
+                }
+            </script>
+            <style>
+                .ranklist-info,
+                .ann-info {
+                    position:fixed;
+                    width:100%;
+                    height:100%;
+                    left:0;
+                    top:0;
+                    background-color:rgba(0,0,0,0.5);
+                    z-index:500;
+                    /*overflow-y:scroll;*/
+                    padding:16px;
+                    display:block;
+                }
+                .ranklist-info-inner,
+                .ann-info-inner{
+                    width: calc(100% - 56px);
+                    height: calc(100% - 56px);
+                    background-color:#FFF;
+                    z-index:501;
+                    padding:12px;
+                }
+                .code-block {
+                    border:1px solid #666;
+                    background-color: #EEE;
+                    font-size:14px;
+                    padding:4px;
+                    overflow-x:scroll;
+                    overflow-y:scroll;
+                }
+                .info-code,
+                .ann-code{
+                    width: calc(100% - 13px);
+                    height: calc(100% - 45px);
+                    margin-bottom:0px;
+                }
+            </style>
+            <div class="ranklist-info" style="display:none;">
+                <div class="ranklist-info-inner">
+                    <h3 style="line-height:20%;margin-top:8px;"><a onclick="hideinfo()">×</a>&nbsp;记录详情</h3>
+                    <pre class="code-block info-code">                        Test text
+                    </pre>
+                </div>
+            </div>
+            <div class="ann-info" style="display:none;">
+                <div class="ann-info-inner">
+                    <h3 style="line-height:20%;margin-top:8px;"><a onclick="hideann()">×</a>&nbsp;作弊处理通告</h3>
+                    <pre class="code-block ann-code">                        Test text
+                    </pre>
+                </div>
+            </div>
+            <!--hr>
+            Credits moved to wiki.
+            <p>Created by <a href="http://gabrielecirulli.com" target="_blank">Gabriele Cirulli.</a> Based on <a href="https://itunes.apple.com/us/app/1024!/id823499224" target="_blank">1024 by Veewo Studio</a> and conceptually similar to <a href="http://asherv.com/threes/"
+                target="_blank">Threes by Asher Vollmer.</a>
+
+            </p>
+            <p>AI solver by <a href="https://github.com/ov3y/65536-AI">Matt Overlan</a>
+
+            </p>
+            <div class="sharing"> <a href="https://localhost:1/share" class="twitter-share-button" data-text="Check out 65536, a game where you join numbers to score high! #65536game #65536ai" data-via="gabrielecirulli">Tweet</a>
+
+                <script>
+                ! function (d, s, id) {
+                    var js, fjs = d.getElementsByTagName(s)[0],
+                        p = /^http:/.test(d.location) ? 'http' : 'https';
+                    if (!d.getElementById(id)) {
+                        js = d.createElement(s);
+                        js.id = id;
+                        js.src = p + '://localhost:1/widgets.js';
+                        fjs.parentNode.insertBefore(js, fjs);
+                    }
+                }(document, 'script', 'twitter-wjs');
+                </script> <span class="btc-donate">
+        <a href="bitcoin:1Ec6onfsQmoP9kkL3zkpB6c5sA4PVcXU2i">
+          <img src="meta/icon_bitcoin.png">Donate
+        </a>
+        <span class="address"><code>1Ec6onfsQmoP9kkL3zkpB6c5sA4PVcXU2i</code></span>
+</span>
+            </div>
+        </div-->
+        </div>
+        <script src="./AK IOI_files/animframe_polyfill.js.下载"></script>
+        <script src="./AK IOI_files/hammer.min.js.下载"></script>
+        <script src="./AK IOI_files/keyboard_input_manager.js.下载"></script>
+        <script src="./AK IOI_files/html_actuator.js.下载"></script>
+        <script src="./AK IOI_files/grid.js.下载"></script>
+        <script src="./AK IOI_files/tile.js.下载"></script>
+        <script src="./AK IOI_files/game_manager.js.下载"></script>
+        <script src="./AK IOI_files/application.js.下载"></script>
+        <!--script src="js/all.js"></script-->
+        <script src="./AK IOI_files/ai.js.下载"></script>
+        <!--script src="https://cdn.luogu.org/js/jquery-2.1.1.min.js"></script-->
+        <script>
+          function IsPC(){    
+            var userAgentInfo = navigator.userAgent;  
+            var Agents = new Array("Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod");    
+            var flag = true;
+            for (var v = 0; v < Agents.length; v++) {    
+              if (userAgentInfo.indexOf(Agents[v]) > 0) { flag = false; break; }    
+            }    
+            return flag;    
+          }
+          if(!IsPC()) document.getElementById("cheat-how").style.display="none";
+          var u = navigator.userAgent;
+          var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/);
+          if(!isiOS) document.getElementById("getfixed").style.display="none";
+        </script>
+        <script>
+        (function (i, s, o, g, r, a, m) {
+            i["GoogleAnalyticsObject"] = r;
+            i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, "script", "//www.google-analytics.com/analytics.js", "ga");
+
+        ga("create", "UA-42620757-2", "gabrielecirulli.github.io");
+        ga("send", "pageview");
+        </script>
+    <script defer="" src="./AK IOI_files/beacon.min.js.下载" data-cf-beacon="{&quot;rayId&quot;:&quot;66f95396bae7b0d8&quot;,&quot;version&quot;:&quot;2021.6.0&quot;,&quot;r&quot;:1,&quot;token&quot;:&quot;177e03f818ae4f26ab3b1ab521701133&quot;,&quot;si&quot;:10}"></script>
+
+
+</body></html>
