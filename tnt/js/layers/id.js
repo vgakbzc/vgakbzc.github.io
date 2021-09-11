@@ -1,6 +1,6 @@
 var inertiaPerSecond = new Decimal(0)
 var inertiaCap = new Decimal(60)
-var inertiaGenerationLimit = new Decimal(1.03)
+var inertiaGenerationLimit = new Decimal(2)
 
 addLayer("id", {
     name: "idle", // This is optional, only used in a few places, If absent it just uses the layer id.
@@ -153,7 +153,7 @@ addLayer("id", {
         },
     },
     update(diff) {
-        inertiaGenerationLimit = (new Decimal(1.03)).mul(buyableEffect(this.layer, "22")).mul(buyableEffect(this.layer, "11"))
+        inertiaGenerationLimit = (new Decimal(2)).mul(buyableEffect(this.layer, "22")).mul(buyableEffect(this.layer, "11"))
         if(getPointGen().lte(inertiaGenerationLimit) && player[this.layer].points.lt(inertiaCap)) {
             inertiaPerSecond = new Decimal(0.05)
             inertiaPerSecond = inertiaPerSecond.mul(buyableEffect(this.layer, "21"))

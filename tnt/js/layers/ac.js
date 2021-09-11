@@ -89,5 +89,14 @@ addLayer("ac", {
                 player[this.layer].points = player[this.layer].points.mul(1.03);
             }
         },
+        31 : {
+            name: "Pretty Rich",
+            done() {return player["c"].points.gte(1e180)}, // This one is a freebie
+            goalTooltip: "Get 1e180 cp.", // Shows when achievement is not completed
+            doneTooltip: "Get 1e180 cp.", // Showed when the achievement is completed
+            onComplete() {
+                player[this.layer].points = player[this.layer].points.mul(1.03);
+            }
+        },
     },
 })

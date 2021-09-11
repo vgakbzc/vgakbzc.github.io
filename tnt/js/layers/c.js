@@ -5,6 +5,7 @@ addLayer("c", {
     startData() { return {
         unlocked: true,
 		points: new Decimal(0),
+        resetTime: new Decimal(0),
     }},
     color: "#aaaaaa",
     requires: function(){
@@ -39,7 +40,8 @@ addLayer("c", {
     }, // Prestige currency exponent
     gainMult() { // Calculate the multiplier for main currency from bonuses
         mult = new Decimal(1)
-        mult.mul(buyableEffect("f", 11))
+        mult = mult.mul(buyableEffect("f", 11))
+        if(hasUpgrade(this.layer, 41)) mult = mult.mul(upgradeEffect(this.layer, 41))
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -50,6 +52,12 @@ addLayer("c", {
         {key: "c", description: "C: Reset for compressed null points", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
     layerShown(){return true},
+    midsection: [
+        ["display-text", function(){
+            if(player["c"].points.lt(new Decimal("1.8e308"))) return ""
+            return "CP above 1.8e308 are unstable. 75% of them disappear every second."
+        }],
+    ],
     softcap() {
         if(hasUpgrade("c", 34)) {
             return new Decimal("1.8e308")
@@ -58,7 +66,7 @@ addLayer("c", {
     },
     softcapPower() {
         if(hasUpgrade("c", 34)) {
-            return new Decimal("1e-1000")
+            return new Decimal("0.001")
         }
         return new Decimal("0.333333333")
     },
@@ -217,13 +225,58 @@ addLayer("c", {
                 cost = cost.mul(buyableEffect("a", 11))
                 return cost
             }
-        }
+        },
+        41 : {
+            description : "Multiplies cp gain based on np.",
+            cost() {
+                let cost = (new Decimal("1e120"))
+                cost = cost.mul(buyableEffect("a", 11))
+                return cost
+            },
+            effect() {
+                let eff = (new Decimal(1)).add(player.points.add(1).ln().pow(2))
+                if(eff.gt(1e8)) eff = eff.sub(1e8).add(1).ln().add(1e8)
+                return eff
+                //return new Decimal(1)
+            },
+            effectDisplay() {
+                return format(upgradeEffect(this.layer, this.id)) + "x"
+            },
+            unlocked() {
+                return hasMilestone("w", 0)
+            }
+        },
+        42 : {
+            description : "Multiplies np gain based on time since last reset.",
+            cost() {
+                let cost = (new Decimal("1e210"))
+                cost = cost.mul(buyableEffect("a", 11))
+                return cost
+            },
+            effect() {
+                let eff = (new Decimal(player[this.layer].resetTime)).exp().pow(0.5)
+                if(eff.gte(1e8)) eff = eff.sub(1e8).add(1).pow(0.07).add(1e8)
+                return eff
+                //return new Decimal(1)
+            },
+            effectDisplay() {
+                return format(upgradeEffect(this.layer, this.id)) + "x"
+            },
+            unlocked() {
+                return hasMilestone("w", 0)
+            }
+        },
     },
     autoUpgrade() {
-        return hasAchievement("ac", 31)
+        return hasMilestone("f", 0)
     },
     passiveGeneration() {
-        if(hasMilestone("e", 0)) return 0.5
-        return 0
+        let gen = new Decimal(0)
+        if(hasMilestone("e", 0)) gen = new Decimal(0.02)
+        if(hasAchievement("ac", 31)) gen = gen.mul(10)
+        return gen
     },
+    update(diff) {
+        if(player["c"].points.gte("1.8e308")) player[this.layer].points = player[this.layer].points.sub(new Decimal("1.8e308")).mul((new Decimal(diff)).times((new Decimal(0.25)).ln()).exp()).add(new Decimal("1.8e308"))
+    }
 })

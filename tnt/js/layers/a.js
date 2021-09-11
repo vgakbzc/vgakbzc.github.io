@@ -22,9 +22,9 @@ addLayer("a", {
     baseAmount() {return player["c"].points}, // Get the current amount of baseResource
     type: "static", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
     exponent: function(){
-        return 1.5
+        return new Decimal(6)
     }, // Prestige currency exponent
-    base: 2.5,
+    base: new Decimal(2.5),
     gainMult() { // Calculate the multiplier for main currency from bonuses
         mult = new Decimal(1)
         mult = mult.mul(upgradeEffect("s", 11))
@@ -77,9 +77,9 @@ addLayer("a", {
     },
     milestones: {
     	0: {
-    		requirementDescription: "Have at least 3 ap",
-    		effectDescription: "Prices of points in row 2 are 70% off.",
-    		done() {return player[this.layer].points.gte(3)}
+    		requirementDescription: "Have at least 1 ap",
+    		effectDescription: "np gain is raised to 1.5th power.",
+    		done() {return player[this.layer].points.gte(1)}
     	}
     },
 })

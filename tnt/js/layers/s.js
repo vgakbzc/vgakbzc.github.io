@@ -10,7 +10,7 @@ addLayer("s", {
     }},
     color: "#cccd22",
     requires: function(){
-        req = new Decimal("1e48")
+        req = new Decimal("1e100000000")
         return req
     }, // Can be a function that takes requirement increases into account
     resource: "stars", // Name of prestige currency
@@ -33,7 +33,8 @@ addLayer("s", {
         {key: "s", description: "S: Reset for stars", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
     layerShown(){
-        return player["f"].unlocked && player["a"].unlocked
+        //return player["f"].unlocked && player["a"].unlocked
+        return false
     },
     upgrades: {
         11: {

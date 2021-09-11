@@ -15,7 +15,7 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0.3",
+	num: "0.0.4",
 	name: "Something Update",
 }
 
@@ -33,7 +33,7 @@ function getStartPoints(){
 
 // Determines if it should show points/sec
 function canGenPoints(){
-	return true
+	return hasUpgrade('c', 11)
 }
 
 // Calculate points/sec!
@@ -41,14 +41,15 @@ function getPointGen() {
 	if(!canGenPoints())
 		return new Decimal(0)
 
-	let gain = new Decimal(0)
-	if(hasUpgrade('c', 11)) gain = gain.add(1);
+	let gain = new Decimal(1)
 	if(hasUpgrade('c', 12)) gain = gain.times(upgradeEffect("c", 12));
 	if(hasUpgrade('c', 13)) gain = gain.times(upgradeEffect("c", 13));
 	if(hasUpgrade('c', 33)) gain = gain.times(upgradeEffect("c", 33));
+	if(hasUpgrade('c', 42)) gain = gain.times(upgradeEffect("c", 42));
 	gain = gain.mul(player["ac"].points.mul(0.01).sub(1).mul(buyableEffect("w", 11)).add(1))
 	gain = gain.mul(buyableEffect("id",11))
 	if(player.points.lt(16)) gain = gain.mul((new Decimal(68)).div(player.points.add(1)).sub(3).pow(0.5).abs())
+	if(hasMilestone("a", 0)) gain = gain.pow(1.5)
 	return gain
 }
 
@@ -62,7 +63,7 @@ var displayThings = [
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.points.gte(new Decimal("e50"))
+	return player.points.gte(new Decimal("e314"))
 }
 
 
