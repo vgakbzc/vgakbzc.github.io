@@ -131,13 +131,14 @@ addLayer("id", {
                 return cost.floor()
             },
             effect(x) { // Effects of owning x of the items, x is a decimal
-                let eff = (new Decimal(10)).pow(x.pow(1.2))
+                let eff = (new Decimal(player["c"].resetTime)).add(1).pow(x.add(1).pow(x.pow(0.1))).mul((new Decimal(player["c"].resetTime)).add(1).pow(0.33).exp().pow(0.2).pow(x)).mul(x).add(1)
                 return eff;
             },
             display() { // Everything else displayed in the buyable button after the title
                 let data = tmp[this.layer].buyables[this.id]
-                return "Cost: " + format(data.cost) + " seconds of Inertia\n\
-                Amount: " + player[this.layer].buyables[this.id] + " / 50\n"
+                return "Effect of this upgrade resets when C resets.\nCost: " + format(data.cost) + " seconds of Inertia\n\
+                Amount: " + player[this.layer].buyables[this.id] + " / 50\n\
+                Effect: " + format(buyableEffect(this.layer, this.id))
             },
             unlocked() { return true }, 
             canAfford() {
@@ -154,6 +155,7 @@ addLayer("id", {
     },
     update(diff) {
         inertiaGenerationLimit = (new Decimal(2)).mul(buyableEffect(this.layer, "22")).mul(buyableEffect(this.layer, "11"))
+        //if(hasUpgrade("c", 43)) inertiaGenerationLimit = inertiaGenerationLimit.mul(upgradeEffect("c", 43))
         if(getPointGen().lte(inertiaGenerationLimit) && player[this.layer].points.lt(inertiaCap)) {
             inertiaPerSecond = new Decimal(0.05)
             inertiaPerSecond = inertiaPerSecond.mul(buyableEffect(this.layer, "21"))

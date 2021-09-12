@@ -91,12 +91,24 @@ addLayer("ac", {
         },
         31 : {
             name: "Pretty Rich",
-            done() {return player["c"].points.gte(1e180)}, // This one is a freebie
-            goalTooltip: "Get 1e180 cp.", // Shows when achievement is not completed
-            doneTooltip: "Get 1e180 cp.", // Showed when the achievement is completed
+            done() {return player.points.gte(6.66e68) && hasMilestone("e", 0)}, // This one is a freebie
+            goalTooltip: "Get 6.66e68 null points.\nReward: Passive cp generation is multiplied by 10.", // Shows when achievement is not completed
+            doneTooltip: "Get 6.66e68 null points.\nReward: Passive cp generation is multiplied by 10.", // Showed when the achievement is completed
             onComplete() {
                 player[this.layer].points = player[this.layer].points.mul(1.03);
+            },
+            unlocked() {
+                return hasMilestone("e", 0)
             }
+        },
+        32 : {
+            name: "Infinity isn't hard",
+            done() {return player["c"].points.gte(new Decimal("1.8e308"))}, // This one is a freebie
+            goalTooltip: "Get 1.8e308 cp.", // Shows when achievement is not completed
+            doneTooltip: "Get 1.8e308 cp.", // Showed when the achievement is completed
+            onComplete() {
+                player[this.layer].points = player[this.layer].points.mul(1.03);
+            },
         },
     },
 })

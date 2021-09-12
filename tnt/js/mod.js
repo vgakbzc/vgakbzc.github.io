@@ -5,8 +5,8 @@ let modInfo = {
 	pointsName: "null points",
 	modFiles: ["layers/c.js", "layers/a.js", "layers/f.js", "layers/e.js", "layers/w.js", "layers/ac.js", "layers/id.js", "tree.js", "layers/s.js"],
 
-	discordName: "",
-	discordLink: "",
+	discordName: "The Null Tree Discord",
+	discordLink: "https://discord.gg/jtDquFCJEJ",
 	initialStartPoints: new Decimal (0), // Used for hard resets and new players
 	offlineLimit() {
 		return 1
@@ -15,7 +15,7 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0.4",
+	num: "0.0.5",
 	name: "Something Update",
 }
 
@@ -49,7 +49,8 @@ function getPointGen() {
 	gain = gain.mul(player["ac"].points.mul(0.01).sub(1).mul(buyableEffect("w", 11)).add(1))
 	gain = gain.mul(buyableEffect("id",11))
 	if(player.points.lt(16)) gain = gain.mul((new Decimal(68)).div(player.points.add(1)).sub(3).pow(0.5).abs())
-	if(hasMilestone("a", 0)) gain = gain.pow(1.5)
+	if(hasMilestone("a", 0)) gain = gain.pow(1.15)
+	if(hasUpgrade("c", 43)) gain = gain.pow(upgradeEffect("c", 43))
 	return gain
 }
 
@@ -63,7 +64,7 @@ var displayThings = [
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.points.gte(new Decimal("e314"))
+	return player.points.gte(new Decimal("e328"))
 }
 
 

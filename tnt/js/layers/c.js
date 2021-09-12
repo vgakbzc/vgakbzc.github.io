@@ -1,3 +1,6 @@
+var cpCap = new Decimal("1.8e308")
+var lnCpDecreaseRate = (new Decimal(0.05)).ln()
+
 addLayer("c", {
     name: "compress", // This is optional, only used in a few places, If absent it just uses the layer id.
     symbol: "C", // This appears on the layer's node. Default is the id with the first letter capitalized
@@ -5,7 +8,7 @@ addLayer("c", {
     startData() { return {
         unlocked: true,
 		points: new Decimal(0),
-        resetTime: new Decimal(0),
+        resetTime: 0,
     }},
     color: "#aaaaaa",
     requires: function(){
@@ -42,6 +45,12 @@ addLayer("c", {
         mult = new Decimal(1)
         mult = mult.mul(buyableEffect("f", 11))
         if(hasUpgrade(this.layer, 41)) mult = mult.mul(upgradeEffect(this.layer, 41))
+        let tmpp = ["e","f","w","a"]
+        for(let i = 0; i < 4; i++)if(hasMilestone(tmpp[i], 2)) {
+            let eff = (new Decimal(2)).pow(player[tmpp[i]].best)
+            if(eff.gt(1e9)) eff = eff.sub(1e9).add(1).pow(0.4).add(1e9)
+            mult = mult.mul(eff)
+        }
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -54,8 +63,8 @@ addLayer("c", {
     layerShown(){return true},
     midsection: [
         ["display-text", function(){
-            if(player["c"].points.lt(new Decimal("1.8e308"))) return ""
-            return "CP above 1.8e308 are unstable. 75% of them disappear every second."
+            if(player["c"].points.lt(cpCap)) return ""
+            return "CP above " + format(cpCap) + " are unstable. " + format((new Decimal(100)).sub(lnCpDecreaseRate.exp().mul(100))) + "% of them disappear every second."
         }],
     ],
     softcap() {
@@ -82,7 +91,7 @@ addLayer("c", {
         },
         12 : {
             name : "Null produces null",
-            description : "Multiply effect of upgrade 11 based on your np.",
+            description : "Multiply np gain based on your np.",
             cost() {
                 let cost = (new Decimal(1))
                 cost = cost.mul(buyableEffect("a", 11))
@@ -104,7 +113,7 @@ addLayer("c", {
         },
         13 : {
             name : "Compressed is the best",
-            description : "Multiply effect of upgrade 11 based on your compressed null point(cp).",
+            description : "Multiply np gain based on your compressed null point(cp).",
             cost() {
                 let cost = (new Decimal(2))
                 cost = cost.mul(buyableEffect("a", 11))
@@ -229,7 +238,7 @@ addLayer("c", {
         41 : {
             description : "Multiplies cp gain based on np.",
             cost() {
-                let cost = (new Decimal("1e120"))
+                let cost = (new Decimal("1e65"))
                 cost = cost.mul(buyableEffect("a", 11))
                 return cost
             },
@@ -249,18 +258,41 @@ addLayer("c", {
         42 : {
             description : "Multiplies np gain based on time since last reset.",
             cost() {
-                let cost = (new Decimal("1e210"))
+                let cost = (new Decimal("5e91"))
                 cost = cost.mul(buyableEffect("a", 11))
                 return cost
             },
             effect() {
                 let eff = (new Decimal(player[this.layer].resetTime)).exp().pow(0.5)
-                if(eff.gte(1e8)) eff = eff.sub(1e8).add(1).pow(0.07).add(1e8)
+                if(eff.gte(1e8)) eff = eff.sub(1e8).add(1).pow(0.25).add(1e8)
+                if(eff.gte(1e16)) eff = eff.sub(1e16).add(1).pow(0.25).add(1e16)
+                if(eff.gte(1e24)) eff = eff.sub(1e24).add(1).pow(0.25).add(1e24)
+                if(eff.gte(1e32)) eff = eff.sub(1e32).add(1).pow(0.25).add(1e32)
                 return eff
                 //return new Decimal(1)
             },
             effectDisplay() {
                 return format(upgradeEffect(this.layer, this.id)) + "x"
+            },
+            unlocked() {
+                return hasMilestone("w", 0)
+            }
+        },
+        43 : {
+            description : "Increases np gain based on your cp.",
+            cost() {
+                let cost = (new Decimal("e146"))
+                cost = cost.mul(buyableEffect("a", 11))
+                return cost
+            },
+            effect() {
+                let eff = player[this.layer].points.add(1).ln().add(1).ln().add(1).ln().add(1).pow(0.225)
+                if(eff.gt(2)) eff = eff.sub(2).add(1).pow(0.1).ln().add(2)
+                return eff
+                //return new Decimal(1)
+            },
+            effectDisplay() {
+                return "^" + format(upgradeEffect(this.layer, this.id))
             },
             unlocked() {
                 return hasMilestone("w", 0)
@@ -277,6 +309,11 @@ addLayer("c", {
         return gen
     },
     update(diff) {
-        if(player["c"].points.gte("1.8e308")) player[this.layer].points = player[this.layer].points.sub(new Decimal("1.8e308")).mul((new Decimal(diff)).times((new Decimal(0.25)).ln()).exp()).add(new Decimal("1.8e308"))
+        if(player["c"].points.gte(cpCap)) player[this.layer].points = player[this.layer].points.sub(cpCap).mul((new Decimal(diff)).times(lnCpDecreaseRate).exp()).add(cpCap)
+    },
+    doReset(resettingLayer) {
+        if(layers[resettingLayer].row == "side" || layers[resettingLayer].row <= this.row) return
+        if((resettingLayer == "a" || resettingLayer == "e" || resettingLayer == "f" || resettingLayer == "w") && hasMilestone(resettingLayer, 1)) return
+        layerDataReset(this.layer, [])
     }
 })

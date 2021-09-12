@@ -14,7 +14,6 @@ addLayer("a", {
     requires: function(){
         req = new Decimal("e41")
         req = req.mul(buyableEffect("a", 11))
-        if(hasMilestone("a", 0)) req = req.mul(0.3)
         return req
     }, // Can be a function that takes requirement increases into account
     resource: "air points", // Name of prestige currency
@@ -78,8 +77,18 @@ addLayer("a", {
     milestones: {
     	0: {
     		requirementDescription: "Have at least 1 ap",
-    		effectDescription: "np gain is raised to 1.5th power.",
+    		effectDescription: "np gain is raised to 1.15th power.",
     		done() {return player[this.layer].points.gte(1)}
-    	}
+    	},
+    	1: {
+    		requirementDescription: "Have at least 2 ap",
+    		effectDescription: "ap no more resets cp.",
+    		done() {return player[this.layer].points.gte(2)}
+    	},
+    	2: {
+    		requirementDescription: "Have at least 3 ap",
+    		effectDescription: "best ap multiplits cp gain.",
+    		done() {return player[this.layer].points.gte(3)}
+    	},
     },
 })

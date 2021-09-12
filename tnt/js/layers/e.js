@@ -14,7 +14,6 @@ addLayer("e", {
     requires: function(){
         req = new Decimal("e41")
         req = req.mul(buyableEffect("a", 11))
-        if(hasMilestone("a", 0)) req = req.mul(0.3)
         return req
     }, // Can be a function that takes requirement increases into account
     resource: "earth points", // Name of prestige currency
@@ -80,6 +79,16 @@ addLayer("e", {
             requirementDescription: "Have at least 1 ep",
             effectDescription: "You get 2% of cp every second.",
             done() {return player[this.layer].points.gte(1)}
-        }
+        },
+        1: {
+            requirementDescription: "Have at least 2 ep",
+            effectDescription: "ep no more resets cp.",
+            done() {return player[this.layer].points.gte(2)}
+        },
+        2: {
+            requirementDescription: "Have at least 3 ep",
+            effectDescription: "best ep multiplits cp gain.",
+            done() {return player[this.layer].points.gte(3)}
+        },
     },
 })

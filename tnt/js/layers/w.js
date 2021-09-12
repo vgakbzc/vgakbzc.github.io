@@ -21,13 +21,12 @@ addLayer("w", {
     baseAmount() {return player["c"].points}, // Get the current amount of baseResource
     type: "static", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
     exponent: function(){
-        return new Decimal(6)
+        return new Decimal(3.42)
     }, // Prestige currency exponent
     base: new Decimal(2.5),
     gainMult() { // Calculate the multiplier for main currency from bonuses
         mult = new Decimal(1)
         mult = mult.mul(upgradeEffect("s", 11))
-        if(hasMilestone("a", 0)) req = req.mul(0.3)
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -53,7 +52,7 @@ addLayer("w", {
                 return cost.floor()
             },
             effect(x) { // Effects of owning x of the items, x is a decimal
-                let eff = x.sqrt().dividedBy((new Decimal(2000)).sqrt())
+                let eff = x.sqrt().dividedBy((new Decimal(500)).sqrt())
                 return eff.add(1)
             },
             display() { // Everything else displayed in the buyable button after the title
@@ -78,8 +77,18 @@ addLayer("w", {
     milestones: {
         0: {
             requirementDescription: "Have at least 1 wp",
-            effectDescription: "Unlocks 2 new upgrades in C.",
+            effectDescription: "Unlocks 3 new upgrades in C.",
             done() {return player[this.layer].points.gte(1)}
-        }
+        },
+        1: {
+            requirementDescription: "Have at least 2 wp",
+            effectDescription: "wp no more resets cp.",
+            done() {return player[this.layer].points.gte(2)}
+        },
+        2: {
+            requirementDescription: "Have at least 6 wp",
+            effectDescription: "best wp multiplits cp gain.",
+            done() {return player[this.layer].points.gte(6)}
+        },
     },
 })
