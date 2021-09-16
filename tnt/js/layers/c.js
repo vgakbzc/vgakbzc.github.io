@@ -54,7 +54,9 @@ addLayer("c", {
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
-        return new Decimal(1)
+        let exp = new Decimal(1)
+        if(hasUpgrade("inf", 11)) exp = exp.mul(1.1)
+        return exp
     },
     row: 0, // Row the layer is in on the tree (0 is the first row)
     hotkeys: [
@@ -258,7 +260,7 @@ addLayer("c", {
         42 : {
             description : "Multiplies np gain based on time since last reset.",
             cost() {
-                let cost = (new Decimal("5e91"))
+                let cost = (new Decimal("e86"))
                 cost = cost.mul(buyableEffect("a", 11))
                 return cost
             },
@@ -281,7 +283,7 @@ addLayer("c", {
         43 : {
             description : "Increases np gain based on your cp.",
             cost() {
-                let cost = (new Decimal("e146"))
+                let cost = (new Decimal("e145"))
                 cost = cost.mul(buyableEffect("a", 11))
                 return cost
             },
@@ -300,7 +302,7 @@ addLayer("c", {
         },
     },
     autoUpgrade() {
-        return hasMilestone("f", 0)
+        return hasMilestone("f", 0) && player["au"].autoCp
     },
     passiveGeneration() {
         let gen = new Decimal(0)

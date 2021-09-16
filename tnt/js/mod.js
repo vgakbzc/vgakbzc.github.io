@@ -3,7 +3,7 @@ let modInfo = {
 	id: "null_tree",
 	author: "vgakbzc",
 	pointsName: "null points",
-	modFiles: ["layers/c.js", "layers/a.js", "layers/f.js", "layers/e.js", "layers/w.js", "layers/ac.js", "layers/id.js", "tree.js", "layers/s.js"],
+	modFiles: ["layers/inf.js", "layers/au.js", "layers/c.js", "layers/a.js", "layers/f.js", "layers/e.js", "layers/w.js", "layers/ac.js", "layers/id.js", "tree.js", "layers/s.js"],
 
 	discordName: "The Null Tree Discord",
 	discordLink: "https://discord.gg/jtDquFCJEJ",
@@ -15,8 +15,8 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0.5",
-	name: "Something Update",
+	num: "0.0.6",
+	name: "I Wanna 1.80E+308 Updates",
 }
 
 let changelog = `<h1>What??? You want to read the change log???</h1>`
@@ -51,6 +51,9 @@ function getPointGen() {
 	if(player.points.lt(16)) gain = gain.mul((new Decimal(68)).div(player.points.add(1)).sub(3).pow(0.5).abs())
 	if(hasMilestone("a", 0)) gain = gain.pow(1.15)
 	if(hasUpgrade("c", 43)) gain = gain.pow(upgradeEffect("c", 43))
+	if(hasUpgrade("inf", 12)) gain = gain.pow(upgradeEffect("inf", 12))
+
+	if(player["au"].npProductDecrease) gain = gain.pow(0.85)
 	return gain
 }
 
@@ -64,7 +67,7 @@ var displayThings = [
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.points.gte(new Decimal("e328"))
+	return player.points.gte(new Decimal("e361"))
 }
 
 

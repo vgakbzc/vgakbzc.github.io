@@ -26,7 +26,6 @@ addLayer("e", {
     base: new Decimal(2.5),
     gainMult() { // Calculate the multiplier for main currency from bonuses
         mult = new Decimal(1)
-        mult = mult.mul(upgradeEffect("s", 11))
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -43,6 +42,9 @@ addLayer("e", {
             }
         }
         return true
+    },
+    canBuyMax() {
+        return hasUpgrade("inf", 13)
     },
     buyables: {
         11: {

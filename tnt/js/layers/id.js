@@ -156,7 +156,7 @@ addLayer("id", {
     update(diff) {
         inertiaGenerationLimit = (new Decimal(2)).mul(buyableEffect(this.layer, "22")).mul(buyableEffect(this.layer, "11"))
         //if(hasUpgrade("c", 43)) inertiaGenerationLimit = inertiaGenerationLimit.mul(upgradeEffect("c", 43))
-        if(getPointGen().lte(inertiaGenerationLimit) && player[this.layer].points.lt(inertiaCap)) {
+        if((getPointGen().lte(inertiaGenerationLimit) || player["au"].npProductDecrease) && player[this.layer].points.lt(inertiaCap)) {
             inertiaPerSecond = new Decimal(0.05)
             inertiaPerSecond = inertiaPerSecond.mul(buyableEffect(this.layer, "21"))
         } else {

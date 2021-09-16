@@ -26,7 +26,6 @@ addLayer("f", {
     base: new Decimal(2.5),
     gainMult() { // Calculate the multiplier for main currency from bonuses
         mult = new Decimal(1)
-        mult = mult.mul(upgradeEffect("s", 11))
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -43,6 +42,9 @@ addLayer("f", {
             }
         }
         return true
+    },
+    canBuyMax() {
+        return hasUpgrade("inf", 13)
     },
     buyables: {
         11: {
@@ -77,8 +79,8 @@ addLayer("f", {
     milestones: {
         0: {
             requirementDescription: "Have at least 1 fp",
-            effectDescription: "Auto buys upgrade in C.",
-            done() {return player[this.layer].points.gte(1)}
+            effectDescription: "Auto buys upgrade in C.<br><small>(You can turn it on/off in layer Au.)</small>",
+            done() {return player[this.layer].points.gte(1)},
         },
         1: {
             requirementDescription: "Have at least 2 fp",

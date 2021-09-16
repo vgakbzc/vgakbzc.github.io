@@ -1,3 +1,5 @@
+let achievement31Unlocked = false
+
 addLayer("ac", {
     name: "Achievements", // This is optional, only used in a few places, If absent it just uses the layer id.
     symbol: "Ac", // This appears on the layer's node. Default is the id with the first letter capitalized
@@ -98,7 +100,8 @@ addLayer("ac", {
                 player[this.layer].points = player[this.layer].points.mul(1.03);
             },
             unlocked() {
-                return hasMilestone("e", 0)
+                if(hasMilestone("e", 0)) achievement31Unlocked = true
+                return achievement31Unlocked
             }
         },
         32 : {
