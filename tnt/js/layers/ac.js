@@ -113,5 +113,23 @@ addLayer("ac", {
                 player[this.layer].points = player[this.layer].points.mul(1.03);
             },
         },
+        33 : {
+            name: "\"REAL\" automation",
+            done() {return hasUpgrade("inf", 21) && hasUpgrade("inf", 22) && hasUpgrade("inf", 23) && hasUpgrade("inf", 24)}, // This one is a freebie
+            goalTooltip: "Buy all auto prestige for row 2.", // Shows when achievement is not completed
+            doneTooltip: "Buy all auto prestige for row 2.", // Showed when the achievement is completed
+            onComplete() {
+                player[this.layer].points = player[this.layer].points.mul(1.03);
+            },
+        },
+        34 : {
+            name: "Not so challenging",
+            done() {return hasChallenge("inf", 11)}, // This one is a freebie
+            goalTooltip: "Finish EASY challenge once.", // Shows when achievement is not completed
+            doneTooltip: "Finish EASY challenge once.", // Showed when the achievement is completed
+            onComplete() {
+                player[this.layer].points = player[this.layer].points.mul(1.03);
+            },
+        },
     },
 })

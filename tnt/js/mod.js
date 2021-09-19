@@ -15,8 +15,8 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0.6",
-	name: "I Wanna 1.80E+308 Updates",
+	num: "0.0.7",
+	name: "Minor Bugs Fixing!",
 }
 
 let changelog = `<h1>What??? You want to read the change log???</h1>`
@@ -54,6 +54,8 @@ function getPointGen() {
 	if(hasUpgrade("inf", 12)) gain = gain.pow(upgradeEffect("inf", 12))
 
 	if(player["au"].npProductDecrease) gain = gain.pow(0.85)
+
+	if(inChallenge("inf", 11)) gain = gain.pow((new Decimal(9)).sub(challengeCompletions("inf", 11)).div(10).pow(0.75))
 	return gain
 }
 
@@ -67,7 +69,7 @@ var displayThings = [
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.points.gte(new Decimal("e361"))
+	return player.points.gte(new Decimal("e374"))
 }
 
 

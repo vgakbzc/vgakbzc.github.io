@@ -7,6 +7,7 @@ addLayer("au", {
         unlocked: true,
         autoCp: false,
         npProductDecrease: false,
+        autoRow2: [false, false, false, false]
     }},
     color: "#42f971",
     type: "none",
@@ -55,6 +56,90 @@ addLayer("au", {
             },
             unlocked() {
                 return hasMilestone("f", 0)
+            }
+        },
+        21: {
+            display() {
+                let tmpString = "Auto reset for ap.<br>Currently: "
+                if(player[this.layer].autoRow2[0]) tmpString = tmpString + "On"
+                else tmpString = tmpString + "Off"
+                return tmpString
+            },
+            onClick() {
+                player[this.layer].autoRow2[0] = !player[this.layer].autoRow2[0]
+            },
+            canClick() {
+                return true
+            },
+            style() {
+                if(player[this.layer].autoRow2[0]) return {"background-color": layers["a"].color, "color": "black"}
+                else return {"background-color": "#af5f5f", "color": "black"}
+            },
+            unlocked() {
+                return hasUpgrade("inf", 21)
+            }
+        },
+        22: {
+            display() {
+                let tmpString = "Auto reset for fp.<br>Currently: "
+                if(player[this.layer].autoRow2[1]) tmpString = tmpString + "On"
+                else tmpString = tmpString + "Off"
+                return tmpString
+            },
+            onClick() {
+                player[this.layer].autoRow2[1] = !player[this.layer].autoRow2[1]
+            },
+            canClick() {
+                return true
+            },
+            style() {
+                if(player[this.layer].autoRow2[1]) return {"background-color": layers["f"].color, "color": "black"}
+                else return {"background-color": "#af5f5f", "color": "black"}
+            },
+            unlocked() {
+                return hasUpgrade("inf", 22)
+            }
+        },
+        23: {
+            display() {
+                let tmpString = "Auto reset for ep.<br>Currently: "
+                if(player[this.layer].autoRow2[2]) tmpString = tmpString + "On"
+                else tmpString = tmpString + "Off"
+                return tmpString
+            },
+            onClick() {
+                player[this.layer].autoRow2[2] = !player[this.layer].autoRow2[2]
+            },
+            canClick() {
+                return true
+            },
+            style() {
+                if(player[this.layer].autoRow2[2]) return {"background-color": layers["e"].color, "color": "black"}
+                else return {"background-color": "#af5f5f", "color": "black"}
+            },
+            unlocked() {
+                return hasUpgrade("inf", 23)
+            }
+        },
+        24: {
+            display() {
+                let tmpString = "Auto reset for wp.<br>Currently: "
+                if(player[this.layer].autoRow2[3]) tmpString = tmpString + "On"
+                else tmpString = tmpString + "Off"
+                return tmpString
+            },
+            onClick() {
+                player[this.layer].autoRow2[3] = !player[this.layer].autoRow2[3]
+            },
+            canClick() {
+                return true
+            },
+            style() {
+                if(player[this.layer].autoRow2[3]) return {"background-color": layers["w"].color, "color": "black"}
+                else return {"background-color": "#af5f5f", "color": "black"}
+            },
+            unlocked() {
+                return hasUpgrade("inf", 24)
             }
         },
     }

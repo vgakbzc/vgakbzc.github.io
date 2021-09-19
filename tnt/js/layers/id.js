@@ -164,5 +164,6 @@ addLayer("id", {
         }
         player[this.layer].points = player[this.layer].points.add(inertiaPerSecond.mul(diff))
         inertiaCap = (new Decimal(60)).mul(buyableEffect(this.layer, "12"))
+        if(player[this.layer].points.gt(inertiaCap)) player[this.layer].points = inertiaCap
     },
 })

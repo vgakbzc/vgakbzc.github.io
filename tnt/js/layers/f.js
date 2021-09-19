@@ -46,6 +46,12 @@ addLayer("f", {
     canBuyMax() {
         return hasUpgrade("inf", 13)
     },
+    doReset(resettingLayer) {
+        if(layers[resettingLayer].row == "side" || layers[resettingLayer].row <= this.row) return
+        let keep = []
+        if((resettingLayer == "inf") && hasUpgrade(resettingLayer, 14)) keep.push("milestones")
+        layerDataReset(this.layer, keep)
+    },
     buyables: {
         11: {
             title: "More cp gain", // Optional, displayed at the top in a larger font
@@ -93,4 +99,7 @@ addLayer("f", {
             done() {return player[this.layer].points.gte(3)}
         },
     },
+    automate() {
+        if(hasUpgrade("inf", 22) && player["au"].autoRow2[1] && canReset(this.layer)) doReset(this.layer)
+    }
 })

@@ -69,11 +69,85 @@ addLayer("inf", {
         13: {
             description : "Unlocks buy max in row 2.",
             cost() {
-                let cost = new Decimal(3)
+                let cost = new Decimal(2)
                 return cost
             },
             unlocked() {
                 return hasUpgrade(this.layer, 12)
+            }
+        },
+        14: {
+            description : "Keeps milestones of row 2 when resetting.",
+            cost() {
+                let cost = new Decimal(3)
+                return cost
+            },
+            unlocked() {
+                return hasUpgrade(this.layer, 13)
+            }
+        },
+        21: {
+            description : "Auto reset for ap.",
+            cost() {
+                let cost = new Decimal(3)
+                return cost
+            },
+            unlocked() {
+                return hasUpgrade(this.layer, 14)
+            }
+        },
+        22: {
+            description : "Auto reset for fp.",
+            cost() {
+                let cost = new Decimal(3)
+                return cost
+            },
+            unlocked() {
+                return hasUpgrade(this.layer, 14)
+            }
+        },
+        23: {
+            description : "Auto reset for ep.",
+            cost() {
+                let cost = new Decimal(3)
+                return cost
+            },
+            unlocked() {
+                return hasUpgrade(this.layer, 14)
+            }
+        },
+        24: {
+            description : "Auto reset for wp.",
+            cost() {
+                let cost = new Decimal(5)
+                return cost
+            },
+            unlocked() {
+                return hasUpgrade(this.layer, 14)
+            }
+        },
+    },
+    challenges: {
+        11: {
+            name: "EASY",
+            challengeDescription() {
+                if(maxedChallenge(this.layer, this.id)) return ""
+                return "Your np gain becomes ^" + format((new Decimal(9)).sub(challengeCompletions(this.layer, this.id)).div(10).pow(0.75)) + "."
+            },
+            goalDescription() {
+                if(maxedChallenge(this.layer, this.id)) return ""
+                return "Get 1.80e308 cp."
+            },
+            rewardDescription() {
+                if(maxedChallenge(this.layer, this.id)) return ""
+                return "Your cp decrease rate becomes x" + format((new Decimal(0)).sub((new Decimal(challengeCompletions(this.layer, this.id))).add(1).mul(0.1)).add(1)) + "."
+            },
+            onEnter() {
+                doReset(this.layer)
+            },
+            completionLimit: new Decimal(5),
+            canComplete() {
+                return player["c"].points.gte(new Decimal("1.8e308"))
             }
         }
     }

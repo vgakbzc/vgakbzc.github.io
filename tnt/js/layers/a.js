@@ -93,4 +93,13 @@ addLayer("a", {
     		done() {return player[this.layer].points.gte(3)}
     	},
     },
+    doReset(resettingLayer) {
+        if(layers[resettingLayer].row == "side" || layers[resettingLayer].row <= this.row) return
+        let keep = []
+        if((resettingLayer == "inf") && hasUpgrade(resettingLayer, 14)) keep.push("milestones")
+        layerDataReset(this.layer, keep)
+    },
+    automate() {
+        if(hasUpgrade("inf", 21) && player["au"].autoRow2[0] && canReset(this.layer)) doReset(this.layer)
+    }
 })

@@ -46,6 +46,12 @@ addLayer("w", {
     canBuyMax() {
         return hasUpgrade("inf", 13)
     },
+    doReset(resettingLayer) {
+        if(layers[resettingLayer].row == "side" || layers[resettingLayer].row <= this.row) return
+        let keep = []
+        if((resettingLayer == "inf") && hasUpgrade(resettingLayer, 14)) keep.push("milestones")
+        layerDataReset(this.layer, keep)
+    },
     buyables: {
         11: {
             title: "Stronger achievement power", // Optional, displayed at the top in a larger font
@@ -93,4 +99,7 @@ addLayer("w", {
             done() {return player[this.layer].points.gte(6)}
         },
     },
+    automate() {
+        if(hasUpgrade("inf", 24) && player["au"].autoRow2[3] && canReset(this.layer)) doReset(this.layer)
+    }
 })
