@@ -21,7 +21,10 @@ addLayer("w", {
     baseAmount() {return player["c"].points}, // Get the current amount of baseResource
     type: "static", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
     exponent: function(){
-        return new Decimal(3.42)
+        let exp = new Decimal(3.42)
+        if(hasUpgrade("inf", 43)) exp = exp.sqrt().add(1)
+        if(hasAchievement("ac", 42)) exp = exp.pow(0.75)
+        return exp
     }, // Prestige currency exponent
     base: new Decimal(2.5),
     gainMult() { // Calculate the multiplier for main currency from bonuses
@@ -101,5 +104,14 @@ addLayer("w", {
     },
     automate() {
         if(hasUpgrade("inf", 24) && player["au"].autoRow2[3] && canReset(this.layer)) doReset(this.layer)
+        if(hasUpgrade("inf", 34) && player["au"].autoRow2Upgrade[3]) {
+            for(i in player[this.layer].buyables) {
+                if(!player[this.layer].points.gte(tmp[this.layer].buyables[i].cost)) continue
+                cost = tmp[this.layer].buyables[i].cost
+                player[this.layer].points = player[this.layer].points.sub(cost) 
+                player[this.layer].buyables[i] = player[this.layer].buyables[i].add(1)
+                player[this.layer].spentOnBuyables = player[this.layer].spentOnBuyables.add(cost)
+            }
+        }
     }
 })

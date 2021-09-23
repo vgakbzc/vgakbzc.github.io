@@ -15,8 +15,8 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0.7",
-	name: "Minor Bugs Fixing!",
+	num: "0.0.8",
+	name: "Breaking Change",
 }
 
 let changelog = `<h1>What??? You want to read the change log???</h1>`
@@ -49,10 +49,11 @@ function getPointGen() {
 	gain = gain.mul(player["ac"].points.mul(0.01).sub(1).mul(buyableEffect("w", 11)).add(1))
 	gain = gain.mul(buyableEffect("id",11))
 	if(player.points.lt(16)) gain = gain.mul((new Decimal(68)).div(player.points.add(1)).sub(3).pow(0.5).abs())
+	if(hasUpgrade("inf", 41)) gain = gain.mul(upgradeEffect("inf", 41))
+
 	if(hasMilestone("a", 0)) gain = gain.pow(1.15)
 	if(hasUpgrade("c", 43)) gain = gain.pow(upgradeEffect("c", 43))
 	if(hasUpgrade("inf", 12)) gain = gain.pow(upgradeEffect("inf", 12))
-
 	if(player["au"].npProductDecrease) gain = gain.pow(0.85)
 
 	if(inChallenge("inf", 11)) gain = gain.pow((new Decimal(9)).sub(challengeCompletions("inf", 11)).div(10).pow(0.75))
@@ -69,7 +70,7 @@ var displayThings = [
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.points.gte(new Decimal("e374"))
+	return player.points.gte(new Decimal("e701"))
 }
 
 

@@ -131,5 +131,23 @@ addLayer("ac", {
                 player[this.layer].points = player[this.layer].points.mul(1.03);
             },
         },
+        41 : {
+            name: "5 dozens of infinities",
+            done() {return player["inf"].points.gte(60)},
+            goalTooltip: "Get 60 ip.",
+            doneTooltip: "Get 60 ip.",
+            onComplete() {
+                player[this.layer].points = player[this.layer].points.mul(1.03);
+            },
+        },
+        42 : {
+            name: "3k infinities",
+            done() {return player["inf"].points.gte(3000)},
+            goalTooltip: "Get 3000 ip.<br>Reward: points in row 2 becomes much cheaper.",
+            doneTooltip: "Get 3000 ip.<br>Reward: points in row 2 becomes much cheaper.",
+            onComplete() {
+                player[this.layer].points = player[this.layer].points.mul(1.03);
+            },
+        },
     },
 })

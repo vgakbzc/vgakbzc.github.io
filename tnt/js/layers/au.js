@@ -7,7 +7,8 @@ addLayer("au", {
         unlocked: true,
         autoCp: false,
         npProductDecrease: false,
-        autoRow2: [false, false, false, false]
+        autoRow2: [false, false, false, false],
+        autoRow2Upgrade: [false, false, false, false],
     }},
     color: "#42f971",
     type: "none",
@@ -135,11 +136,95 @@ addLayer("au", {
                 return true
             },
             style() {
-                if(player[this.layer].autoRow2[3]) return {"background-color": layers["w"].color, "color": "black"}
+                if(player[this.layer].autoRow2[3]) return {"background-color": layers["w"].color}
                 else return {"background-color": "#af5f5f", "color": "black"}
             },
             unlocked() {
                 return hasUpgrade("inf", 24)
+            }
+        },
+        31: {
+            display() {
+                let tmpString = "Auto buy ap upgrades.<br>Currently: "
+                if(player[this.layer].autoRow2Upgrade[0]) tmpString = tmpString + "On"
+                else tmpString = tmpString + "Off"
+                return tmpString
+            },
+            onClick() {
+                player[this.layer].autoRow2Upgrade[0] = !player[this.layer].autoRow2Upgrade[0]
+            },
+            canClick() {
+                return true
+            },
+            style() {
+                if(player[this.layer].autoRow2Upgrade[0]) return {"background-color": layers["a"].color, "color": "black"}
+                else return {"background-color": "#af5f5f", "color": "black"}
+            },
+            unlocked() {
+                return hasUpgrade("inf", 31)
+            }
+        },
+        32: {
+            display() {
+                let tmpString = "Auto buy fp upgrades.<br>Currently: "
+                if(player[this.layer].autoRow2Upgrade[1]) tmpString = tmpString + "On"
+                else tmpString = tmpString + "Off"
+                return tmpString
+            },
+            onClick() {
+                player[this.layer].autoRow2Upgrade[1] = !player[this.layer].autoRow2Upgrade[1]
+            },
+            canClick() {
+                return true
+            },
+            style() {
+                if(player[this.layer].autoRow2Upgrade[1]) return {"background-color": layers["f"].color, "color": "black"}
+                else return {"background-color": "#af5f5f", "color": "black"}
+            },
+            unlocked() {
+                return hasUpgrade("inf", 32)
+            }
+        },
+        33: {
+            display() {
+                let tmpString = "Auto buy ep upgrades.<br>Currently: "
+                if(player[this.layer].autoRow2Upgrade[2]) tmpString = tmpString + "On"
+                else tmpString = tmpString + "Off"
+                return tmpString
+            },
+            onClick() {
+                player[this.layer].autoRow2Upgrade[2] = !player[this.layer].autoRow2Upgrade[2]
+            },
+            canClick() {
+                return true
+            },
+            style() {
+                if(player[this.layer].autoRow2Upgrade[2]) return {"background-color": layers["e"].color, "color": "black"}
+                else return {"background-color": "#af5f5f", "color": "black"}
+            },
+            unlocked() {
+                return hasUpgrade("inf", 33)
+            }
+        },
+        34: {
+            display() {
+                let tmpString = "Auto buy wp upgrades.<br>Currently: "
+                if(player[this.layer].autoRow2Upgrade[3]) tmpString = tmpString + "On"
+                else tmpString = tmpString + "Off"
+                return tmpString
+            },
+            onClick() {
+                player[this.layer].autoRow2Upgrade[3] = !player[this.layer].autoRow2Upgrade[3]
+            },
+            canClick() {
+                return true
+            },
+            style() {
+                if(player[this.layer].autoRow2Upgrade[3]) return {"background-color": layers["w"].color, "color": "black"}
+                else return {"background-color": "#af5f5f", "color": "black"}
+            },
+            unlocked() {
+                return hasUpgrade("inf", 34)
             }
         },
     }

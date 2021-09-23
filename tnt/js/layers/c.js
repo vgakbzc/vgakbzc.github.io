@@ -70,14 +70,16 @@ addLayer("c", {
         }],
     ],
     softcap() {
+        if(hasUpgrade("inf", 44)) return new Decimal("1.8e308")
         if(hasUpgrade("c", 34)) {
             return new Decimal("1.8e308")
         }
         return new Decimal("1e33")
     },
     softcapPower() {
+        if(hasUpgrade("inf", 44)) return new Decimal("0.25")
         if(hasUpgrade("c", 34)) {
-            return (new Decimal("0.001")).mul(challengeCompletions("inf", 11)).mul(challengeCompletions("inf", 11))
+            return (new Decimal("e-1000"))
         }
         return new Decimal("0.333333333")
     },
@@ -313,9 +315,10 @@ addLayer("c", {
     update(diff) {
         if(player["c"].points.gte(cpCap)) player[this.layer].points = player[this.layer].points.sub(cpCap).mul((new Decimal(diff)).times(lnCpDecreaseRate).exp()).add(cpCap)
         let tmp = new Decimal(0.95)
-        tmp = tmp.mul((new Decimal(10)).sub(challengeCompletions("inf", 11)).div(10))
+        tmp = tmp.mul((new Decimal(0)).sub(challengeCompletions("inf", 11)).mul(.15).add(1).pow(2))
         tmp = (new Decimal(1)).sub(tmp)
         lnCpDecreaseRate = tmp.ln()
+        if(inChallenge("inf", 12)) player[this.layer].points = player[this.layer].points.mul((new Decimal(diff)).times(((new Decimal(1)).sub(challengeCompletions("inf", 12)*0.195)).ln()).exp())
     },
     doReset(resettingLayer) {
         if(layers[resettingLayer].row == "side" || layers[resettingLayer].row <= this.row) return
