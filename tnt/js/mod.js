@@ -3,7 +3,7 @@ let modInfo = {
 	id: "null_tree",
 	author: "vgakbzc",
 	pointsName: "null points",
-	modFiles: ["layers/inf.js", "layers/au.js", "layers/c.js", "layers/a.js", "layers/f.js", "layers/e.js", "layers/w.js", "layers/ac.js", "layers/id.js", "tree.js", "layers/s.js"],
+	modFiles: ["layers/p.js", "layers/inf.js", "layers/au.js", "layers/c.js", "layers/a.js", "layers/f.js", "layers/e.js", "layers/w.js", "layers/ac.js", "layers/id.js", "tree.js", "layers/s.js"],
 
 	discordName: "The Null Tree Discord",
 	discordLink: "https://discord.gg/jtDquFCJEJ",
@@ -15,8 +15,8 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0.8",
-	name: "Breaking Change",
+	num: "0.0.9",
+	name: "Something Changes, Anyway",
 }
 
 let changelog = `<h1>What??? You want to read the change log???</h1>`
@@ -50,6 +50,8 @@ function getPointGen() {
 	gain = gain.mul(buyableEffect("id",11))
 	if(player.points.lt(16)) gain = gain.mul((new Decimal(68)).div(player.points.add(1)).sub(3).pow(0.5).abs())
 	if(hasUpgrade("inf", 41)) gain = gain.mul(upgradeEffect("inf", 41))
+	if(hasUpgrade("s", 22)) gain = gain.mul(upgradeEffect("s", 22))
+	gain = gain.mul(tmp["s"].getEnergyEffect)
 
 	if(hasMilestone("a", 0)) gain = gain.pow(1.15)
 	if(hasUpgrade("c", 43)) gain = gain.pow(upgradeEffect("c", 43))
@@ -70,7 +72,7 @@ var displayThings = [
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.points.gte(new Decimal("e701"))
+	return player.points.gte(new Decimal("e1600"))
 }
 
 

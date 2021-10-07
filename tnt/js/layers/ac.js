@@ -149,5 +149,32 @@ addLayer("ac", {
                 player[this.layer].points = player[this.layer].points.mul(1.03);
             },
         },
+        43 : {
+            name: "Faster than a potato",
+            done() {return getPointGen().div(player.points.add(1)).gt(1e29)},
+            goalTooltip: "Get 29 OoMs of np per second.",
+            doneTooltip: "Get 29 OoMs of np per second.",
+            onComplete() {
+                player[this.layer].points = player[this.layer].points.mul(1.03);
+            },
+        },
+        44 : {
+            name: "Nearly 1e-21 Universe",
+            done() {return player["s"].points.gte(15)},
+            goalTooltip: "Get 15 stars.",
+            doneTooltip: "Get 15 stars.",
+            onComplete() {
+                player[this.layer].points = player[this.layer].points.mul(1.1);
+            },
+        },
+        51 : {
+            name: "Energetic Energy",
+            done() {return buyableEffect("s", 11).mul(buyableEffect("s", 12)).mul(buyableEffect("s", 13)).gte(2303)},
+            goalTooltip: "Get at least x2304 energy power from upgrades in S.<br>Reward: These upgrades increases energy gain.",
+            doneTooltip: "Get at least x2304 energy power from upgrades in S.",
+            onComplete() {
+                player[this.layer].points = player[this.layer].points.mul(2.5);
+            },
+        }
     },
 })

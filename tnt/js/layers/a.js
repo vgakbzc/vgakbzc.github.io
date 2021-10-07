@@ -14,6 +14,7 @@ addLayer("a", {
     requires: function(){
         req = new Decimal("e41")
         req = req.mul(buyableEffect("a", 11))
+        if(hasUpgrade("s", 24)) req = req.mul(upgradeEffect("s", 24))
         return req
     }, // Can be a function that takes requirement increases into account
     resource: "air points", // Name of prestige currency
@@ -24,6 +25,7 @@ addLayer("a", {
         let exp = new Decimal(6)
         if(hasUpgrade("inf", 43)) exp = exp.sqrt().add(1)
         if(hasAchievement("ac", 42)) exp = exp.pow(0.75)
+        if(hasUpgrade("s", 11)) exp = exp.pow(0.5)
         return exp
     }, // Prestige currency exponent
     base: new Decimal(2.5),
@@ -99,7 +101,7 @@ addLayer("a", {
     doReset(resettingLayer) {
         if(layers[resettingLayer].row == "side" || layers[resettingLayer].row <= this.row) return
         let keep = []
-        if((resettingLayer == "inf") && hasUpgrade(resettingLayer, 14)) keep.push("milestones")
+        if((resettingLayer == "inf") && hasUpgrade(resettingLayer, 14) || (resettingLayer == "s") && hasUpgrade(resettingLayer, 13)) keep.push("milestones")
         layerDataReset(this.layer, keep)
     },
     automate() {

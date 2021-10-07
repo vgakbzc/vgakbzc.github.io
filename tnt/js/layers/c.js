@@ -70,15 +70,15 @@ addLayer("c", {
         }],
     ],
     softcap() {
-        if(hasUpgrade("inf", 44)) return new Decimal("1.8e308")
         if(hasUpgrade("c", 34)) {
+            if(hasUpgrade("inf", 44)) return new Decimal("1.8e308")
             return new Decimal("1.8e308")
         }
         return new Decimal("1e33")
     },
     softcapPower() {
-        if(hasUpgrade("inf", 44)) return new Decimal("0.25")
         if(hasUpgrade("c", 34)) {
+            if(hasUpgrade("inf", 44)) return new Decimal("0.25")
             return (new Decimal("e-1000"))
         }
         return new Decimal("0.333333333")
@@ -310,6 +310,7 @@ addLayer("c", {
         let gen = new Decimal(0)
         if(hasMilestone("e", 0)) gen = new Decimal(0.02)
         if(hasAchievement("ac", 31)) gen = gen.mul(10)
+        if(hasUpgrade("s", 14)) gen = gen.add(1e-34)
         return gen
     },
     update(diff) {

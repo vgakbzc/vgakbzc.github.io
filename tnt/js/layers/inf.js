@@ -1,7 +1,7 @@
 addLayer("inf", {
     //name: "Air", // This is optional, only used in a few places, If absent it just uses the layer id.
     symbol: "Inf", // This appears on the layer's node. Default is the id with the first letter capitalized
-    position: 0, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
+    position: 3, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
     branches : ["c"],
     startData() { return {
         unlocked: false,
@@ -191,7 +191,7 @@ addLayer("inf", {
             }
         },
         42: {
-            description : "Infinity points are 10x cheaper.",
+            description : "Infinity points are 10x cheaper, and get 10% ip every second.",
             cost() {
                 let cost = new Decimal(20)
                 return cost
@@ -242,5 +242,9 @@ addLayer("inf", {
                 return player["c"].points.gte(new Decimal("1.8e308"))
             }
         },
+    },
+    passiveGeneration() {
+        if(hasUpgrade("inf", 42)) return new Decimal(0.1)
+        return new Decimal(0)
     }
 })
