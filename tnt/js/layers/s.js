@@ -9,7 +9,12 @@ addLayer("s", {
         best: new Decimal(0),
         shown: false,
         energy: new Decimal(0),
+        egm: new Decimal(0),
         resetTime: 0,
+        egcount: [
+            new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0),
+            new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0)
+        ]
     }},
     color: "#cccd22",
     requires: function(){
@@ -49,12 +54,37 @@ addLayer("s", {
         eff = eff.mul(buyableEffect(this.layer, 11)).mul(buyableEffect(this.layer, 12)).mul(buyableEffect(this.layer, 13))
         return eff.add(1)
     },
-    midsection: [
-        ["display-text", function(){
-            if(!hasUpgrade("s", 12)) return ""
-            return "You have " + format(player["s"].energy) + " energy, which multiply np gain by " + format(tmp["s"].getEnergyEffect) + ". (+" + format(tmp["s"].energyGenerationAmount) + "/s)"
-        }],
-    ],
+    tabFormat: {
+        "Upgrades": {
+            content: [
+                "main-display", 
+                "prestige-button", 
+                "blank",
+                ["display-text", function(){
+                    if(!hasUpgrade("s", 12)) return ""
+                    return "You have " + format(player["s"].energy) + " energy, which multiply np gain by " + format(tmp["s"].getEnergyEffect) + ". (+" + format(tmp["s"].energyGenerationAmount) + "/s)"
+                }],
+                "blank",
+                "upgrades",
+            ],
+        },
+        "Boosters": {
+            content: [
+                ["display-text", function(){
+                    if(!hasUpgrade("s", 12)) return ""
+                    return "You have " + format(player["s"].energy) + " energy, which multiply np gain by " + format(tmp["s"].getEnergyEffect) + ". (+" + format(tmp["s"].energyGenerationAmount) + "/s)"
+                }],
+                ["display-text", function(){
+                    if(!hasUpgrade("s", 12)) return ""
+                    return "You have " + format(player[this.layer].egm) + " Energy Gain Multiplier(EGM). (+" + format(player[this.layer].egcount[0]) + "/s)"
+                }],
+                ["display-text", "Note that every generator bought (not generated) slightly increases generating speed."],
+                "blank",
+                "blank",
+                "buyables",
+            ],
+        },
+    },
     upgrades: {
         11: {
             description: "Prices of ap and fp grows slower.",
@@ -139,6 +169,10 @@ addLayer("s", {
             effect() {
                 let eff = (new Decimal(player[this.layer].resetTime)).exp().pow(1.5)
                 if(eff.gte(1e63)) eff = eff.sub(1e63).pow(0.45).add(1e63)
+                if(eff.gte(1e100)) eff = eff.sub(1e100).pow(0.1).add(1e100)
+                if(eff.gte(1e110)) eff = eff.sub(1e110).pow(0.1).add(1e110)
+                if(eff.gte(1e120)) eff = eff.sub(1e120).pow(0.1).add(1e120)
+                if(eff.gte(1e130)) eff = new Decimal(1e130)
                 return eff
             },
             effectDisplay() {
@@ -203,6 +237,7 @@ addLayer("s", {
             title: "Stronger Energy", // Optional, displayed at the top in a larger font
             cost(x) { // cost for buying xth buyable, can be an object if there are multiple currencies
                 let cost = (new Decimal(1.5)).add(x.mul(0.05)).pow(x).pow(0.35).mul(6000)
+                if(x.gte(80)) cost = cost.pow(x.sub(69).div(10))
                 return cost.floor()
             },
             effect(x) { // Effects of owning x of the items, x is a decimal
@@ -226,11 +261,18 @@ addLayer("s", {
                 //player[this.layer].spentOnBuyables = player[this.layer].spentOnBuyables.add(cost) // This is a built-in system that you can use for respeccing but it only works with a single Decimal value
             },
             purchaseLimit: new Decimal(1e308),
+            style() {
+                return {
+                    "height": "140px",
+                    "width": "140px"
+                }
+            }
         },
         12: {
             title: "Stronger^2 Energy", // Optional, displayed at the top in a larger font
             cost(x) { // cost for buying xth buyable, can be an object if there are multiple currencies
                 let cost = (new Decimal(1.6)).add(x.mul(0.08)).pow(x).pow(0.4).mul(1e9)
+                if(x.gte(30)) cost = cost.pow(x.sub(22).div(7))
                 return cost
             },
             effect(x) { // Effects of owning x of the items, x is a decimal
@@ -254,11 +296,18 @@ addLayer("s", {
                 //player[this.layer].spentOnBuyables = player[this.layer].spentOnBuyables.add(cost) // This is a built-in system that you can use for respeccing but it only works with a single Decimal value
             },
             purchaseLimit: new Decimal(1e308),
+            style() {
+                return {
+                    "height": "140px",
+                    "width": "140px"
+                }
+            }
         },
         13: {
             title: "Stronger^3 Energy", // Optional, displayed at the top in a larger font
             cost(x) { // cost for buying xth buyable, can be an object if there are multiple currencies
-                let cost = (new Decimal(1.8)).add(x.mul(0.11)).pow(x).pow(0.45).mul(1e18)
+                let cost = (new Decimal(2)).add(x.mul(0.11)).pow(x).pow(0.45).mul(1e18)
+                if(x.gte(10)) cost = cost.pow(x.sub(8).div(2))
                 return cost
             },
             effect(x) { // Effects of owning x of the items, x is a decimal
@@ -282,21 +331,192 @@ addLayer("s", {
                 //player[this.layer].spentOnBuyables = player[this.layer].spentOnBuyables.add(cost) // This is a built-in system that you can use for respeccing but it only works with a single Decimal value
             },
             purchaseLimit: new Decimal(1e308),
+            style() {
+                return {
+                    "height": "140px",
+                    "width": "140px"
+                }
+            },
+            buyMax() {
+                while(player[this.layer].buyables[this.id].canAfford) {
+                    cost = tmp[this.layer].buyables[this.id].cost
+                    player[this.layer].energy = player[this.layer].energy.sub(cost) 
+                    player[this.layer].buyables[this.id] = player[this.layer].buyables[this.id].add(1)
+                }
+            }
+        },
+        41: {
+            title: "1st Energy Generator", // Optional, displayed at the top in a larger font
+            cost(x) { // cost for buying xth buyable, can be an object if there are multiple currencies
+                let cost = (new Decimal(10)).add(x).pow(x).pow(0.35).mul(1e9)
+                return cost.floor()
+            },
+            effect(x) { // Effects of owning x of the items, x is a decimal
+                let eff = x.add(1)
+                return eff;
+            },
+            display() { // Everything else displayed in the buyable button after the title
+                let data = tmp[this.layer].buyables[this.id]
+                return "Cost: " + format(data.cost) + " energy\n\
+                Generates EGM."
+            },
+            unlocked() { return hasAchievement("ac", 51) }, 
+            canAfford() {
+                return player[this.layer].energy.gte(tmp[this.layer].buyables[this.id].cost)
+            },
+            buy() { 
+                cost = tmp[this.layer].buyables[this.id].cost
+                player[this.layer].energy = player[this.layer].energy.sub(cost) 
+                player[this.layer].buyables[this.id] = player[this.layer].buyables[this.id].add(1)
+                player[this.layer].egcount[0] = player[this.layer].egcount[0].add(1)
+                //player[this.layer].spentOnBuyables = player[this.layer].spentOnBuyables.add(cost) // This is a built-in system that you can use for respeccing but it only works with a single Decimal value
+            },
+            purchaseLimit: new Decimal(1e308),
+            style() {
+                return {
+                    "height": "140px",
+                    "width": "140px"
+                }
+            }
+        },
+        42: {
+            title: "2nd Energy Generator", // Optional, displayed at the top in a larger font
+            cost(x) { // cost for buying xth buyable, can be an object if there are multiple currencies
+                let cost = (new Decimal(100)).add(x).pow(x).pow(0.41).mul(3.2e15)
+                return cost
+            },
+            effect(x) { // Effects of owning x of the items, x is a decimal
+                let eff = x.add(1).pow(2)
+                return eff;
+            },
+            display() { // Everything else displayed in the buyable button after the title
+                let data = tmp[this.layer].buyables[this.id]
+                return "Cost: " + format(data.cost) + " energy\n\
+                Generates 1st EG."
+            },
+            unlocked() { return hasAchievement("ac", 51) }, 
+            canAfford() {
+                return player[this.layer].energy.gte(tmp[this.layer].buyables[this.id].cost)
+            },
+            buy() { 
+                cost = tmp[this.layer].buyables[this.id].cost
+                player[this.layer].energy = player[this.layer].energy.sub(cost) 
+                player[this.layer].buyables[this.id] = player[this.layer].buyables[this.id].add(1)
+                player[this.layer].egcount[1] = player[this.layer].egcount[1].add(1)
+                //player[this.layer].spentOnBuyables = player[this.layer].spentOnBuyables.add(cost) // This is a built-in system that you can use for respeccing but it only works with a single Decimal value
+            },
+            purchaseLimit: new Decimal(1e308),
+            style() {
+                return {
+                    "height": "140px",
+                    "width": "140px"
+                }
+            }
+        },
+        43: {
+            title: "3rd Energy Generator", // Optional, displayed at the top in a larger font
+            cost(x) { // cost for buying xth buyable, can be an object if there are multiple currencies
+                let cost = (new Decimal(1000)).add(x).pow(x).pow(0.47).mul(5e18)
+                return cost
+            },
+            effect(x) { // Effects of owning x of the items, x is a decimal
+                let eff = x.add(1).pow(3)
+                return eff;
+            },
+            display() { // Everything else displayed in the buyable button after the title
+                let data = tmp[this.layer].buyables[this.id]
+                return "Cost: " + format(data.cost) + " energy\n\
+                Generates 2nd EG."
+            },
+            unlocked() { return hasAchievement("ac", 51) }, 
+            canAfford() {
+                return player[this.layer].energy.gte(tmp[this.layer].buyables[this.id].cost)
+            },
+            buy() { 
+                cost = tmp[this.layer].buyables[this.id].cost
+                player[this.layer].energy = player[this.layer].energy.sub(cost) 
+                player[this.layer].buyables[this.id] = player[this.layer].buyables[this.id].add(1)
+                player[this.layer].egcount[2] = player[this.layer].egcount[2].add(1)
+                //player[this.layer].spentOnBuyables = player[this.layer].spentOnBuyables.add(cost) // This is a built-in system that you can use for respeccing but it only works with a single Decimal value
+            },
+            purchaseLimit: new Decimal(1e308),
+            style() {
+                return {
+                    "height": "140px",
+                    "width": "140px"
+                }
+            }
+        },
+        44: {
+            title: "4st Energy Generator", // Optional, displayed at the top in a larger font
+            cost(x) { // cost for buying xth buyable, can be an object if there are multiple currencies
+                let cost = (new Decimal(6900)).add(x.mul(1.8)).pow(x).pow(0.59).mul(2e26)
+                return cost
+            },
+            effect(x) { // Effects of owning x of the items, x is a decimal
+                let eff = x.add(1).pow(3)
+                return eff;
+            },
+            display() { // Everything else displayed in the buyable button after the title
+                let data = tmp[this.layer].buyables[this.id]
+                return "Cost: " + format(data.cost) + " energy\n\
+                Generates 3rd RG."
+            },
+            unlocked() { return hasAchievement("ac", 51) }, 
+            canAfford() {
+                return player[this.layer].energy.gte(tmp[this.layer].buyables[this.id].cost)
+            },
+            buy() { 
+                cost = tmp[this.layer].buyables[this.id].cost
+                player[this.layer].energy = player[this.layer].energy.sub(cost) 
+                player[this.layer].buyables[this.id] = player[this.layer].buyables[this.id].add(1)
+                player[this.layer].egcount[3] = player[this.layer].egcount[0].add(3)
+                //player[this.layer].spentOnBuyables = player[this.layer].spentOnBuyables.add(cost) // This is a built-in system that you can use for respeccing but it only works with a single Decimal value
+            },
+            purchaseLimit: new Decimal(1e308),
+            style() {
+                return {
+                    "height": "140px",
+                    "width": "140px"
+                }
+            },
+            buyMax() {
+                while(player[this.layer].buyables[this.id].canAfford) {
+                    cost = tmp[this.layer].buyables[this.id].cost
+                    player[this.layer].energy = player[this.layer].energy.sub(cost) 
+                    player[this.layer].buyables[this.id] = player[this.layer].buyables[this.id].add(1)
+                    player[this.layer].egcount[3] = player[this.layer].egcount[0].add(3)
+                }
+            }
         },
     },
     energyGenerationAmount() {
+        if(!hasUpgrade("s", 12)) return new Decimal(0)
         let amt = player[this.layer].points.exp().pow(0.5)
         if(hasUpgrade("s", 21)) amt = amt.mul(upgradeEffect("s", 21))
         if(hasUpgrade("s", 23)) amt = amt.mul(upgradeEffect("s", 23))
         if(player[this.layer].points.lt(1)) amt = new Decimal(0)
+        amt = amt.mul(player[this.layer].egm.add(1))
+        if(player[this.layer].buyables[41].gte(25)) amt = amt.pow(1.1)
 
         if(hasAchievement("ac", 51)) amt = amt.mul(buyableEffect(this.layer, 11).mul(buyableEffect(this.layer, 12)).mul(buyableEffect(this.layer, 13)).pow(0.5))
+        
+        if(amt.gte(1e18)) amt = amt.sub(1e18).pow(0.89).add(1e18)
+        if(amt.gte(1e24)) amt = amt.sub(1e24).pow(0.80).add(1e24)
+        if(amt.gte(1e28)) amt = amt.sub(1e28).pow(0.80).add(1e28)
+        if(amt.gte(1e32)) amt = amt.sub(1e32).pow(0.80).add(1e32)
+        if(amt.gte(1e37)) amt = amt.sub(1e37).pow(0.80).add(1e37)
+
         return amt
     },
     update(diff) {
         player[this.layer].energy = player[this.layer].energy.add(tmp[this.layer].energyGenerationAmount.mul(diff))
+        player[this.layer].egm = player[this.layer].egm.add(player[this.layer].egcount[0].mul(diff).mul((new Decimal(1.02)).pow(player[this.layer].buyables["41"])))
+        for(var i = 0; i < 3; i += 1) {
+            player[this.layer].egcount[i] = player[this.layer].egcount[i + 1].mul(1.0 - (i + 1) / 8).mul(diff).mul((new Decimal(1.02)).pow(player[this.layer].buyables["4" + (i + 2)])).add(player[this.layer].egcount[i])
+        }
     },
     challenges: {
         
-    }
+    },
 })

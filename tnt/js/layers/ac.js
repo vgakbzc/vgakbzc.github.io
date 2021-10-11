@@ -170,7 +170,7 @@ addLayer("ac", {
         51 : {
             name: "Energetic Energy",
             done() {return buyableEffect("s", 11).mul(buyableEffect("s", 12)).mul(buyableEffect("s", 13)).gte(2303)},
-            goalTooltip: "Get at least x2304 energy power from upgrades in S.<br>Reward: These upgrades increases energy gain.",
+            goalTooltip: "Get at least x2304 energy power from upgrades in S.<br>Reward: These upgrades increases energy gain, and also unlockes something great.",
             doneTooltip: "Get at least x2304 energy power from upgrades in S.",
             onComplete() {
                 player[this.layer].points = player[this.layer].points.mul(2.5);

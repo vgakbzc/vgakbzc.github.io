@@ -113,5 +113,8 @@ addLayer("w", {
                 player[this.layer].spentOnBuyables = player[this.layer].spentOnBuyables.add(cost)
             }
         }
+    },
+    milestonePopups() {
+        return !(hasUpgrade("inf", 24) && player["au"].autoRow2[3])
     }
 })

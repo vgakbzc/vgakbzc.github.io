@@ -116,4 +116,7 @@ addLayer("a", {
         	}
         }
     },
+    milestonePopups() {
+        return !(hasUpgrade("inf", 21) && player["au"].autoRow2[0])
+    }
 })
