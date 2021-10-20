@@ -175,6 +175,15 @@ addLayer("ac", {
             onComplete() {
                 player[this.layer].points = player[this.layer].points.mul(2.5);
             },
-        }
+        },
+        52 : {
+            name: "Too Much Fire",
+            done() {return player["f"].points.gte(110)},
+            goalTooltip: "Get 110 fp.",
+            doneTooltip: "Get 110 fp.",
+            onComplete() {
+                player[this.layer].points = player[this.layer].points.mul(3.1);
+            },
+        },
     },
 })

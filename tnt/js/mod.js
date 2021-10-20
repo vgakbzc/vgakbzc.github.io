@@ -15,8 +15,8 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0.10",
-	name: "I HATE Bugs",
+	num: "0.0.11",
+	name: "Energy Dimen... Oh no, Generators",
 }
 
 let changelog = `<h1>Sorry i do not use this</h1>`
@@ -72,7 +72,7 @@ var displayThings = [
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.points.gte(new Decimal("e1750"))
+	return player.points.gte(new Decimal("e5678"))
 }
 
 

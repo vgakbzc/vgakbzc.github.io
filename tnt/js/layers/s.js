@@ -19,6 +19,13 @@ addLayer("s", {
     color: "#cccd22",
     requires: function(){
         req = new Decimal("e500")
+        if(player[this.layer].points.gt(100)) req = req.mul(player[this.layer].points.sub(99).div(20).add(1).exp())
+        if(player[this.layer].points.gt(120)) req = req.pow(1.2)
+        if(!hasUpgrade(this.layer, 34) && player[this.layer].points.gt(140)) req = req.mul(player[this.layer].points.sub(99).div(10).add(1).exp().exp())
+        if(player[this.layer].points.gt(200)) req = req.mul(player[this.layer].points.sub(199).div(10).add(1).exp().exp())
+        
+        if(hasUpgrade(this.layer, 32)) req = req.pow(0.7)
+        if(hasUpgrade(this.layer, 34)) req = req.pow(upgradeEffect(this.layer, 34))
         return req
     }, // Can be a function that takes requirement increases into account
     resource: "stars", // Name of prestige currency
@@ -26,7 +33,9 @@ addLayer("s", {
     baseAmount() {return player["c"].points}, // Get the current amount of baseResource
     type: "normal", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
     exponent: function(){
-        return new Decimal("0.05")
+        let expo = new Decimal("0.05")
+        if(hasUpgrade(this.layer, 32)) expo = expo.mul(10)
+        return expo
     }, // Prestige currency exponent
     gainMult() { // Calculate the multiplier for main currency from bonuses
         mult = new Decimal(1)
@@ -52,6 +61,8 @@ addLayer("s", {
     getEnergyEffect() {
         let eff = upgradeEffect("s", 12)
         eff = eff.mul(buyableEffect(this.layer, 11)).mul(buyableEffect(this.layer, 12)).mul(buyableEffect(this.layer, 13))
+        eff = eff.pow(buyableEffect(this.layer, 14))
+        if(hasUpgrade(this.layer, 31)) eff = eff.pow(upgradeEffect(this.layer, 31))
         return eff.add(1)
     },
     tabFormat: {
@@ -231,6 +242,60 @@ addLayer("s", {
                 return "/" + format(upgradeEffect(this.layer, this.id).pow(-1))
             }
         },
+        31: {
+            description: "np increases energy effect.",
+            cost() {
+                let cost = new Decimal(150)
+                return cost
+            },
+            unlocked() {
+                return hasUpgrade("s", 24)
+            },
+            effect() {
+                let eff = player.points.add(1).ln().add(1).ln().add(1).pow(-1).exp().times(-1).add(7)
+                return eff
+            },
+            effectDisplay() {
+                return "^" + format(upgradeEffect(this.layer, this.id))
+            }
+        },
+        32: {
+            description: "Star cost grows slower (and also cheaper).",
+            cost() {
+                let cost = new Decimal(15)
+                return cost
+            },
+            unlocked() {
+                return hasUpgrade("s", 31)
+            },
+        },
+        33: {
+            description: "Get 50% of stars per second.",
+            cost() {
+                let cost = new Decimal(10)
+                return cost
+            },
+            unlocked() {
+                return hasUpgrade("s", 32)
+            },
+        },
+        34: {
+            description: "Energy reduces star price.",
+            cost() {
+                let cost = new Decimal(172.5)
+                return cost
+            },
+            unlocked() {
+                return hasUpgrade("s", 33)
+            },
+            effect() {
+                let eff = player[this.layer].energy.add(1).ln().add(1).pow(-1).mul(0.9).add(0.1).pow(0.25)
+                return eff
+            },
+            effectDisplay() {
+                return "^" + format(upgradeEffect(this.layer, this.id))
+            }
+        },
     },
     buyables: {
         11: {
@@ -321,6 +386,48 @@ addLayer("s", {
                 Next: x" + format(this.effect(player[this.layer].buyables[this.id].add(1)))
             },
             unlocked() { return hasUpgrade(this.layer, 24) }, 
+            canAfford() {
+                return player[this.layer].energy.gte(tmp[this.layer].buyables[this.id].cost)
+            },
+            buy() { 
+                cost = tmp[this.layer].buyables[this.id].cost
+                player[this.layer].energy = player[this.layer].energy.sub(cost) 
+                player[this.layer].buyables[this.id] = player[this.layer].buyables[this.id].add(1)
+                //player[this.layer].spentOnBuyables = player[this.layer].spentOnBuyables.add(cost) // This is a built-in system that you can use for respeccing but it only works with a single Decimal value
+            },
+            purchaseLimit: new Decimal(1e308),
+            style() {
+                return {
+                    "height": "140px",
+                    "width": "140px"
+                }
+            },
+            buyMax() {
+                while(player[this.layer].buyables[this.id].canAfford) {
+                    cost = tmp[this.layer].buyables[this.id].cost
+                    player[this.layer].energy = player[this.layer].energy.sub(cost) 
+                    player[this.layer].buyables[this.id] = player[this.layer].buyables[this.id].add(1)
+                }
+            }
+        },
+        14: {
+            title: "Stronger^^2 Energy", // Optional, displayed at the top in a larger font
+            cost(x) { // cost for buying xth buyable, can be an object if there are multiple currencies
+                let cost = (new Decimal(2)).add(x.mul(0.7)).pow(x).pow(0.45).mul(8e29)
+                if(x.gte(10)) cost = cost.pow(x.sub(8).div(2))
+                return cost
+            },
+            effect(x) { // Effects of owning x of the items, x is a decimal
+                let eff = x.mul(0.1).pow(0.5).add(1)
+                return eff;
+            },
+            display() { // Everything else displayed in the buyable button after the title
+                let data = tmp[this.layer].buyables[this.id]
+                return "Cost: " + format(data.cost) + " energy\n\
+                Energy power becomes ^" + format(data.effect) + "\n\
+                Next: ^" + format(this.effect(player[this.layer].buyables[this.id].add(1)))
+            },
+            unlocked() { return player[this.layer].buyables[44].gte(2) }, 
             canAfford() {
                 return player[this.layer].energy.gte(tmp[this.layer].buyables[this.id].cost)
             },
@@ -502,10 +609,14 @@ addLayer("s", {
         if(hasAchievement("ac", 51)) amt = amt.mul(buyableEffect(this.layer, 11).mul(buyableEffect(this.layer, 12)).mul(buyableEffect(this.layer, 13)).pow(0.5))
         
         if(amt.gte(1e18)) amt = amt.sub(1e18).pow(0.89).add(1e18)
-        if(amt.gte(1e24)) amt = amt.sub(1e24).pow(0.80).add(1e24)
+        if(amt.gte(1e24)) amt = amt.sub(1e24).pow(0.87).add(1e24)
         if(amt.gte(1e28)) amt = amt.sub(1e28).pow(0.80).add(1e28)
         if(amt.gte(1e32)) amt = amt.sub(1e32).pow(0.80).add(1e32)
-        if(amt.gte(1e37)) amt = amt.sub(1e37).pow(0.80).add(1e37)
+        if(amt.gte(1e37)) amt = amt.sub(1e37).pow(0.90).add(1e37)
+        if(amt.gte(1e42)) amt = amt.sub(1e42).pow(0.86).add(1e42)
+        if(amt.gte(1e47)) amt = amt.sub(1e47).pow(0.80).add(1e47)
+        if(amt.gte(1e57)) amt = amt.sub(1e57).pow(0.60).add(1e57)
+        if(amt.gte(1e67)) amt = amt.sub(1e67).pow(0.60).add(1e67)
 
         return amt
     },
@@ -519,4 +630,9 @@ addLayer("s", {
     challenges: {
         
     },
+    passiveGeneration() {
+        gen = new Decimal(0)
+        if(hasUpgrade(this.layer, 33)) gen = gen.add(0.5)
+        return gen
+    }
 })
