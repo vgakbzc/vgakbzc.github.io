@@ -11,7 +11,7 @@ addLayer("p", {
     }},
     color: "#11ffcc",
     requires: function(){
-        req = new Decimal("e4750000")
+        req = new Decimal("e1725")
         return req
     }, // Can be a function that takes requirement increases into account
     resource: "planets", // Name of prestige currency
@@ -26,7 +26,13 @@ addLayer("p", {
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
-        return new Decimal(1)
+        return new Decimal(0.1)
+    },
+    softcap() {
+        return new Decimal(1e5)
+    },
+    softcapPower() {
+        return new Decimal(0.1)
     },
     row: 2, // Row the layer is in on the tree (0 is the first row)
     hotkeys: [
@@ -37,6 +43,52 @@ addLayer("p", {
         return player[this.layer].shown
     },
     upgrades: {
-        
+        11:{
+            description: "Energy generation becomes ^1.1.",
+            cost() {
+                let cost = (new Decimal(1))
+                return cost
+            },
+        },
+        12:{
+            description: "Planets increases energy power.",
+            cost() {
+                let cost = (new Decimal(1e5))
+                return cost
+            },
+            effect() {
+                let eff = player["p"].points.add(1).ln().add(1).pow(-0.05).mul(-1).add(2).pow(2.3).mul(2)
+                return eff
+            },
+            effectDisplay() {
+                return "^" + format(upgradeEffect("p", 12))
+            }
+        },
+        13:{
+            description: "Planets increases ip gain.",
+            cost() {
+                let cost = (new Decimal(1e12))
+                return cost
+            },
+            effect() {
+                let eff = player["p"].points.add(1).ln().add(1).pow(-0.05).mul(-1).add(2).pow(1.9).mul(1.7)
+                return eff
+            },
+            effectDisplay() {
+                return "^" + format(upgradeEffect("p", 13))
+            }
+        },
+        14: {
+            description: "Get 1% planets every second.",
+            cost() {
+                let cost = (new Decimal(5e12))
+                return cost
+            },
+        }
     },
+    passiveGeneration() {
+        let gen = new Decimal(0)
+        if(hasUpgrade("p", 14)) gen = gen.add(0.01)
+        return gen
+    }
 })

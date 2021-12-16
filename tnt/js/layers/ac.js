@@ -8,7 +8,9 @@ addLayer("ac", {
     shouldNotify() { 
         return true
     },
-    resource: "achievement power (which gives you multiplier on points generation)", 
+    resource() {
+        return "achievement power (which makes your points generation x" + format(tmp["ac"].getAchievementPower) + ")"
+    }, 
     row: "side",
     tooltip() { // Optional, tooltip displays when the layer is locked
         return ("Achievements")
@@ -185,5 +187,28 @@ addLayer("ac", {
                 player[this.layer].points = player[this.layer].points.mul(3.1);
             },
         },
+        53 : {
+            name: "Planet",
+            done() {return player["p"].points.gte(1)},
+            goalTooltip: "Get 1 planet.",
+            doneTooltip: "Get 1 planet.",
+            onComplete() {
+                player[this.layer].points = player[this.layer].points.mul(3.1);
+            },
+        },
+        54 : {
+            name: "Achievement Related Achievement",
+            done() {return player["ac"].points.gte(1e4)},
+            goalTooltip: "Get 1e4 Achievement Power.<br/>Reward: Achievement Power becomes stronger.",
+            doneTooltip: "Get 1e4 Achievement Power.",
+            onComplete() {
+                player[this.layer].points = player[this.layer].points.mul(3.1);
+            },
+        },
+    },
+    getAchievementPower() {
+        let pw = player["ac"].points.mul(0.01).sub(1).mul(buyableEffect("w", 11)).add(1)
+        if(hasAchievement("ac", 54)) pw = pw.pow(0.3).exp()
+        return pw
     },
 })

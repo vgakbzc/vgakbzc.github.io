@@ -15,8 +15,8 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0.11",
-	name: "Energy Dimen... Oh no, Generators",
+	num: "0.0.12",
+	name: "......",
 }
 
 let changelog = `<h1>Sorry i do not use this</h1>`
@@ -46,7 +46,7 @@ function getPointGen() {
 	if(hasUpgrade('c', 13)) gain = gain.times(upgradeEffect("c", 13));
 	if(hasUpgrade('c', 33)) gain = gain.times(upgradeEffect("c", 33));
 	if(hasUpgrade('c', 42)) gain = gain.times(upgradeEffect("c", 42));
-	gain = gain.mul(player["ac"].points.mul(0.01).sub(1).mul(buyableEffect("w", 11)).add(1))
+	gain = gain.mul(tmp["ac"].getAchievementPower)
 	gain = gain.mul(buyableEffect("id",11))
 	if(player.points.lt(16)) gain = gain.mul((new Decimal(68)).div(player.points.add(1)).sub(3).pow(0.5).abs())
 	if(hasUpgrade("inf", 41)) gain = gain.mul(upgradeEffect("inf", 41))
@@ -72,7 +72,7 @@ var displayThings = [
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.points.gte(new Decimal("e5678"))
+	return player["s"].energy.gte(new Decimal("4e59"))
 }
 
 

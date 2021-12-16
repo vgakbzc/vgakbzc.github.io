@@ -61,8 +61,9 @@ addLayer("s", {
     getEnergyEffect() {
         let eff = upgradeEffect("s", 12)
         eff = eff.mul(buyableEffect(this.layer, 11)).mul(buyableEffect(this.layer, 12)).mul(buyableEffect(this.layer, 13))
-        eff = eff.pow(buyableEffect(this.layer, 14))
+        eff = eff.pow(buyableEffect(this.layer, 14)).pow(buyableEffect(this.layer, 21))
         if(hasUpgrade(this.layer, 31)) eff = eff.pow(upgradeEffect(this.layer, 31))
+        if(hasUpgrade("p", 12)) eff = eff.pow(upgradeEffect("p", 12))
         return eff.add(1)
     },
     tabFormat: {
@@ -596,6 +597,90 @@ addLayer("s", {
                 }
             }
         },
+        21: {
+            title: "Stronger^^1.5 Energy", // Optional, displayed at the top in a larger font
+            cost(x) { // cost for buying xth buyable, can be an object if there are multiple currencies
+                let cost = (new Decimal(2)).add(x.mul(1.5)).pow(x).pow(0.49).mul(1e58)
+                if(x.gte(10)) cost = cost.pow(x.sub(8).div(2))
+                return cost
+            },
+            effect(x) { // Effects of owning x of the items, x is a decimal
+                let eff = x.mul(0.3).pow(0.25).div(7).add(1)
+                return eff;
+            },
+            display() { // Everything else displayed in the buyable button after the title
+                let data = tmp[this.layer].buyables[this.id]
+                return "Cost: " + format(data.cost) + " energy\n\
+                Energy power becomes ^" + format(data.effect) + "\n\
+                Next: ^" + format(this.effect(player[this.layer].buyables[this.id].add(1)))
+            },
+            unlocked() { return hasUpgrade("p", 14) }, 
+            canAfford() {
+                return player[this.layer].energy.gte(tmp[this.layer].buyables[this.id].cost)
+            },
+            buy() { 
+                cost = tmp[this.layer].buyables[this.id].cost
+                player[this.layer].energy = player[this.layer].energy.sub(cost) 
+                player[this.layer].buyables[this.id] = player[this.layer].buyables[this.id].add(1)
+                //player[this.layer].spentOnBuyables = player[this.layer].spentOnBuyables.add(cost) // This is a built-in system that you can use for respeccing but it only works with a single Decimal value
+            },
+            purchaseLimit: new Decimal(1e308),
+            style() {
+                return {
+                    "height": "140px",
+                    "width": "140px"
+                }
+            },
+            buyMax() {
+                while(player[this.layer].buyables[this.id].canAfford) {
+                    cost = tmp[this.layer].buyables[this.id].cost
+                    player[this.layer].energy = player[this.layer].energy.sub(cost) 
+                    player[this.layer].buyables[this.id] = player[this.layer].buyables[this.id].add(1)
+                }
+            }
+        },
+        22: {
+            title: "Faster Energy", // Optional, displayed at the top in a larger font
+            cost(x) { // cost for buying xth buyable, can be an object if there are multiple currencies
+                let cost = (new Decimal(2.5)).add(x.mul(3)).pow(x.mul(2)).pow(0.72).mul(1e58)
+                if(x.gte(10)) cost = cost.pow(x.sub(8).div(2))
+                return cost
+            },
+            effect(x) { // Effects of owning x of the items, x is a decimal
+                let eff = (new Decimal(1e3)).pow(x.pow(1.5))
+                return eff;
+            },
+            display() { // Everything else displayed in the buyable button after the title
+                let data = tmp[this.layer].buyables[this.id]
+                return "Cost: " + format(data.cost) + " energy\n\
+                Energy generation becomes x" + format(data.effect) + "\n\
+                Next: x" + format(this.effect(player[this.layer].buyables[this.id].add(1)))
+            },
+            unlocked() { return hasUpgrade("p", 14) }, 
+            canAfford() {
+                return player[this.layer].energy.gte(tmp[this.layer].buyables[this.id].cost)
+            },
+            buy() { 
+                cost = tmp[this.layer].buyables[this.id].cost
+                player[this.layer].energy = player[this.layer].energy.sub(cost) 
+                player[this.layer].buyables[this.id] = player[this.layer].buyables[this.id].add(1)
+                //player[this.layer].spentOnBuyables = player[this.layer].spentOnBuyables.add(cost) // This is a built-in system that you can use for respeccing but it only works with a single Decimal value
+            },
+            purchaseLimit: new Decimal(100),
+            style() {
+                return {
+                    "height": "140px",
+                    "width": "140px"
+                }
+            },
+            buyMax() {
+                while(player[this.layer].buyables[this.id].canAfford) {
+                    cost = tmp[this.layer].buyables[this.id].cost
+                    player[this.layer].energy = player[this.layer].energy.sub(cost) 
+                    player[this.layer].buyables[this.id] = player[this.layer].buyables[this.id].add(1)
+                }
+            }
+        },
     },
     energyGenerationAmount() {
         if(!hasUpgrade("s", 12)) return new Decimal(0)
@@ -608,6 +693,10 @@ addLayer("s", {
 
         if(hasAchievement("ac", 51)) amt = amt.mul(buyableEffect(this.layer, 11).mul(buyableEffect(this.layer, 12)).mul(buyableEffect(this.layer, 13)).pow(0.5))
         
+        if(hasUpgrade("p", 11)) amt = amt.pow(1.1)
+
+        amt = amt.mul(buyableEffect("s", 22))
+        
         if(amt.gte(1e18)) amt = amt.sub(1e18).pow(0.89).add(1e18)
         if(amt.gte(1e24)) amt = amt.sub(1e24).pow(0.87).add(1e24)
         if(amt.gte(1e28)) amt = amt.sub(1e28).pow(0.80).add(1e28)
@@ -615,8 +704,7 @@ addLayer("s", {
         if(amt.gte(1e37)) amt = amt.sub(1e37).pow(0.90).add(1e37)
         if(amt.gte(1e42)) amt = amt.sub(1e42).pow(0.86).add(1e42)
         if(amt.gte(1e47)) amt = amt.sub(1e47).pow(0.80).add(1e47)
-        if(amt.gte(1e57)) amt = amt.sub(1e57).pow(0.60).add(1e57)
-        if(amt.gte(1e67)) amt = amt.sub(1e67).pow(0.60).add(1e67)
+        if(amt.gte(1e57)) amt = amt.sub(1e57).pow(0.90).add(1e57)
 
         return amt
     },
