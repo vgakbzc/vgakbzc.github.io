@@ -51,6 +51,7 @@ addLayer("c", {
             if(eff.gt(1e9)) eff = eff.sub(1e9).add(1).pow(0.4).add(1e9)
             mult = mult.mul(eff)
         }
+        if(hasUpgrade(this.layer, 44)) mult = mult.mul(upgradeEffect(this.layer, 44))
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -300,6 +301,25 @@ addLayer("c", {
             },
             unlocked() {
                 return hasMilestone("w", 0)
+            }
+        },
+        44 : {
+            description : "ip increases cp gain.",
+            cost() {
+                let cost = (new Decimal("e4740"))
+                cost = cost.mul(buyableEffect("a", 11))
+                return cost
+            },
+            effect() {
+                let eff = player["inf"].points.pow(3.35)
+                return eff
+                //return new Decimal(1)
+            },
+            effectDisplay() {
+                return "x" + format(upgradeEffect(this.layer, this.id))
+            },
+            unlocked() {
+                return player.points.gte(new Decimal("e17000"))
             }
         },
     },

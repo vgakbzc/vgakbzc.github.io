@@ -205,6 +205,15 @@ addLayer("ac", {
                 player[this.layer].points = player[this.layer].points.mul(3.1);
             },
         },
+        61 : {
+            name: "Eternity",
+            done() {return player["et"].points.gte(1)},
+            goalTooltip: "Get 1 Eternity Point.",
+            doneTooltip: "Get 1 Eternity Point.",
+            onComplete() {
+                player[this.layer].points = player[this.layer].points.mul(1.73);
+            },
+        }
     },
     getAchievementPower() {
         let pw = player["ac"].points.mul(0.01).sub(1).mul(buyableEffect("w", 11)).add(1)

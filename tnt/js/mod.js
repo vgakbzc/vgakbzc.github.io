@@ -3,7 +3,7 @@ let modInfo = {
 	id: "null_tree",
 	author: "vgakbzc",
 	pointsName: "null points",
-	modFiles: ["layers/p.js", "layers/inf.js", "layers/au.js", "layers/c.js", "layers/a.js", "layers/f.js", "layers/e.js", "layers/w.js", "layers/ac.js", "layers/id.js", "tree.js", "layers/s.js"],
+	modFiles: ["layers/et.js", "layers/p.js", "layers/inf.js", "layers/au.js", "layers/c.js", "layers/a.js", "layers/f.js", "layers/e.js", "layers/w.js", "layers/ac.js", "layers/id.js", "tree.js", "layers/s.js"],
 
 	discordName: "The Null Tree Discord",
 	discordLink: "https://discord.gg/jtDquFCJEJ",
@@ -15,8 +15,8 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0.12",
-	name: "......",
+	num: "0.0.13",
+	name: "This version took an eternity.",
 }
 
 let changelog = `<h1>Sorry i do not use this</h1>`
@@ -72,7 +72,7 @@ var displayThings = [
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player["s"].energy.gte(new Decimal("4e59"))
+	return player["et"].points.gte(new Decimal("2"))
 }
 
 
