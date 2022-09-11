@@ -71,7 +71,7 @@ addLayer("f", {
             display() { // Everything else displayed in the buyable button after the title
                 let data = tmp[this.layer].buyables[this.id]
                 return "Cost: " + format(data.cost) + " fire points\n\
-                Amount: " + player[this.layer].buyables[this.id] + " / 2000\n\
+                Amount: " + player[this.layer].buyables[this.id] + " / 50\n\
                 Multiplies cp gain by " + format(data.effect)
             },
             unlocked() { return true }, 
@@ -84,7 +84,7 @@ addLayer("f", {
                 player[this.layer].buyables[this.id] = player[this.layer].buyables[this.id].add(1)
                 player[this.layer].spentOnBuyables = player[this.layer].spentOnBuyables.add(cost) // This is a built-in system that you can use for respeccing but it only works with a single Decimal value
             },
-            purchaseLimit: new Decimal(2000),
+            purchaseLimit: new Decimal(50),
         },
     },
     milestones: {
@@ -105,18 +105,17 @@ addLayer("f", {
         },
     },
     automate() {
-        if(hasUpgrade("inf", 22) && player["au"].autoRow2[1] && canReset(this.layer)) doReset(this.layer)
+        if((hasUpgrade("inf", 22) || hasUpgrade("et", 21)) && player["au"].autoRow2[1] && canReset(this.layer)) doReset(this.layer)
         if(hasUpgrade("inf", 32) && player["au"].autoRow2Upgrade[1]) {
             for(i in player[this.layer].buyables) {
                 if(!player[this.layer].points.gte(tmp[this.layer].buyables[i].cost)) continue
                 cost = tmp[this.layer].buyables[i].cost
-                player[this.layer].points = player[this.layer].points.sub(cost) 
                 player[this.layer].buyables[i] = player[this.layer].buyables[i].add(1)
                 player[this.layer].spentOnBuyables = player[this.layer].spentOnBuyables.add(cost)
             }
         }
     },
     milestonePopups() {
-        return !(hasUpgrade("inf", 22) && player["au"].autoRow2[1])
+        return !((hasUpgrade("inf", 22) || hasUpgrade("et", 21)) && player["au"].autoRow2[1])
     }
 })

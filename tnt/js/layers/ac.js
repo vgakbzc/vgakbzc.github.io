@@ -213,11 +213,102 @@ addLayer("ac", {
             onComplete() {
                 player[this.layer].points = player[this.layer].points.mul(1.73);
             },
-        }
+        },
+        62 : {
+            name: "Why do I have to do these AGAIN?",
+            done() {return player["et"].points.gte(2)},
+            goalTooltip: "Get 2 Eternity Point.",
+            doneTooltip: "Get 2 Eternity Point.",
+            onComplete() {
+                player[this.layer].points = player[this.layer].points.mul(1.23);
+            },
+        },
+        63 : {
+            name: "Hmm...Research?",
+            done() {return player["et"].rp.gte(5)},
+            goalTooltip: "Get 5 Research Point.",
+            doneTooltip: "Get 5 Research Point.",
+            onComplete() {
+                player[this.layer].points = player[this.layer].points.mul(1.23);
+            },
+        },
+        64 : {
+            name: "Booster Master I",
+            done() {return player["et"].level["np"].gte(700)},
+            goalTooltip: "Get 700 Eternity NP Booster Level.<br/>Reward: Eternity Booster Effect Exponent +1.",
+            doneTooltip: "Get 700 Eternity NP Booster Level.",
+            onComplete() {
+                player[this.layer].points = player[this.layer].points.mul(1.23);
+            },
+        },
+        71 : {
+            name: "How is that boosting ITSELF?",
+            done() {return hasUpgrade("et", 24)},
+            goalTooltip: "Buy Et upgrade 24.",
+            doneTooltip: "Buy Et upgrade 24.",
+            onComplete() {
+                player[this.layer].points = player[this.layer].points.mul(1.73);
+            },
+        },
+        72 : {
+            name: "Booster Master II",
+            done() {return player["et"].level["cp"].gte(69)},
+            goalTooltip: "Get 69 Eternity CP Booster Level.<br/>Reward: Eternity Booster Effect Exponent +0.420.",
+            doneTooltip: "Get 69 Eternity CP Booster Level.",
+            onComplete() {
+                player[this.layer].points = player[this.layer].points.mul(1.73);
+            },
+        },
+        73 : {
+            name: "Why am I playing this tree again and again????",
+            done() {return player["et"].points.gte(3)},
+            goalTooltip: "Get 3 Eternity Points.<br/>Reward: Achievement Power becomes ^2.",
+            doneTooltip: "Get 3 Eternity Points.",
+            onComplete() {
+                player[this.layer].points = player[this.layer].points.mul(3);
+            },
+        },
+        74 : {
+            name: "Booster Master III",
+            done() {return player["et"].level["cp"].gte(150)},
+            goalTooltip: "Get 150 Eternity CP Booster Level.<br/>Reward: No Reward Hahaa.",
+            doneTooltip: "Get 150 Eternity CP Booster Level.",
+            onComplete() {
+                player[this.layer].points = player[this.layer].points.mul(1.73);
+            },
+        },
+        81 : {
+            name: "Sacrifice",
+            done() {return player["s"].sacMult.gte(50000)},
+            goalTooltip: "Sacrifice Power >= 50,000.",
+            doneTooltip: "Sacrifice Power >= 50,000.",
+            onComplete() {
+                player[this.layer].points = player[this.layer].points.mul(7);
+            },
+        },
+        82 : {
+            name: "Powerful Eternity",
+            done() {return tmp["et"].getPow.gte(15000)},
+            goalTooltip: "Eternity Power >= 15,000.",
+            doneTooltip: "Eternity Power >= 15,000.",
+            onComplete() {
+                player[this.layer].points = player[this.layer].points.mul(12);
+            },
+        },
+        83 : {
+            name: "Hardworking Researcher",
+            done() {return player["et"].rp.gte(3e5)},
+            goalTooltip: "RP >= 3e5.<br/>Reward: Effect of upgrade 41 in Inf never decreases.",
+            doneTooltip: "RP >= 3e5.",
+            onComplete() {
+                player[this.layer].points = player[this.layer].points.mul(24);
+            },
+        },
     },
     getAchievementPower() {
         let pw = player["ac"].points.mul(0.01).sub(1).mul(buyableEffect("w", 11)).add(1)
-        if(hasAchievement("ac", 54)) pw = pw.pow(0.3).exp()
+        if(hasAchievement("ac", 54)) pw = pw.pow(0.6).exp()
+        if(hasAchievement("ac", 73)) pw = pw.pow(2)
         return pw
     },
 })

@@ -24,6 +24,7 @@ addLayer("e", {
         let exp = new Decimal(6)
         if(hasUpgrade("inf", 43)) exp = exp.sqrt().add(1)
         if(hasAchievement("ac", 42)) exp = exp.pow(0.75)
+        if(hasUpgrade("et", 62)) exp = exp.pow(0.65)
         return exp
     }, // Prestige currency exponent
     base: new Decimal(2.5),
@@ -69,7 +70,7 @@ addLayer("e", {
             display() { // Everything else displayed in the buyable button after the title
                 let data = tmp[this.layer].buyables[this.id]
                 return "Cost: " + format(data.cost) + " earth points\n\
-                Amount: " + player[this.layer].buyables[this.id] + " / 2000\n\
+                Amount: " + player[this.layer].buyables[this.id] + " / 50\n\
                 cp cost exponent decreased by " + format(data.effect)
             },
             unlocked() { return true }, 
@@ -78,11 +79,11 @@ addLayer("e", {
             },
             buy() { 
                 cost = tmp[this.layer].buyables[this.id].cost
-                player[this.layer].points = player[this.layer].points.sub(cost) 
+                player[this.layer].points = player[this.layer].points.sub(cost)
                 player[this.layer].buyables[this.id] = player[this.layer].buyables[this.id].add(1)
                 player[this.layer].spentOnBuyables = player[this.layer].spentOnBuyables.add(cost) // This is a built-in system that you can use for respeccing but it only works with a single Decimal value
             },
-            purchaseLimit: new Decimal(2000),
+            purchaseLimit: new Decimal(50),
         },
     },
     milestones: {
@@ -103,7 +104,7 @@ addLayer("e", {
         },
     },
     automate() {
-        if(hasUpgrade("inf", 23) && player["au"].autoRow2[2] && canReset(this.layer)) doReset(this.layer)
+        if((hasUpgrade("inf", 23) || hasUpgrade("et", 21)) && player["au"].autoRow2[2] && canReset(this.layer)) doReset(this.layer)
         if(hasUpgrade("inf", 33) && player["au"].autoRow2Upgrade[2]) {
             for(i in player[this.layer].buyables) {
                 if(!player[this.layer].points.gte(tmp[this.layer].buyables[i].cost)) continue
@@ -115,6 +116,6 @@ addLayer("e", {
         }
     },
     milestonePopups() {
-        return !(hasUpgrade("inf", 23) && player["au"].autoRow2[2])
+        return !((hasUpgrade("inf", 23) || hasUpgrade("et", 21)) && player["au"].autoRow2[2])
     }
 })

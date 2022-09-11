@@ -9,14 +9,14 @@ let modInfo = {
 	discordLink: "https://discord.gg/jtDquFCJEJ",
 	initialStartPoints: new Decimal (0), // Used for hard resets and new players
 	offlineLimit() {
-		return 1
+		return 0
 	},  // In hours
 }
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.0.13",
-	name: "This version took an eternity.",
+	num: "1.0.0",
+	name: "Eternity Update I.",
 }
 
 let changelog = `<h1>Sorry i do not use this</h1>`
@@ -36,6 +36,24 @@ function canGenPoints(){
 	return hasUpgrade('c', 11)
 }
 
+function normalSoftCap(res, base, pow) {
+	if(res.lte(base)) {
+		return res;
+	}
+	return res.mul(base.pow(pow.sub(1))).root(pow)
+}
+function expSoftCap(res, base, pow) {
+	res = new Decimal(res);
+	base = new Decimal(base);
+	pow = new Decimal(pow);
+	if(res.lte(base)) {
+		return res;
+	}
+	res = res.ln()
+	base = base.ln()
+	return normalSoftCap(res, base, pow).exp()
+}
+
 // Calculate points/sec!
 function getPointGen() {
 	if(!canGenPoints())
@@ -52,6 +70,7 @@ function getPointGen() {
 	if(hasUpgrade("inf", 41)) gain = gain.mul(upgradeEffect("inf", 41))
 	if(hasUpgrade("s", 22)) gain = gain.mul(upgradeEffect("s", 22))
 	gain = gain.mul(tmp["s"].getEnergyEffect)
+	gain = gain.mul(tmp["et"].getEffect["np"])
 
 	if(hasMilestone("a", 0)) gain = gain.pow(1.15)
 	if(hasUpgrade("c", 43)) gain = gain.pow(upgradeEffect("c", 43))
@@ -59,6 +78,11 @@ function getPointGen() {
 	if(player["au"].npProductDecrease) gain = gain.pow(0.85)
 
 	if(inChallenge("inf", 11)) gain = gain.pow((new Decimal(9)).sub(challengeCompletions("inf", 11)).div(10).pow(0.75))
+
+	if(player["et"].points.gte(2)) {
+		gain = expSoftCap(gain, new Decimal("e650"), player["et"].points.pow(2).add(1).ln())
+	}
+
 	return gain
 }
 
@@ -72,7 +96,7 @@ var displayThings = [
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player["et"].points.gte(new Decimal("2"))
+	return player["et"].points.gte(new Decimal("3"))
 }
 
 

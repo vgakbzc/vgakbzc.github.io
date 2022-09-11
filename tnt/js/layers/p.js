@@ -2,7 +2,7 @@ addLayer("p", {
     name: "Planet", // This is optional, only used in a few places, If absent it just uses the layer id.
     symbol: "P", // This appears on the layer's node. Default is the id with the first letter capitalized
     position: 4, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
-    branches : ["e", "w"],
+    branches : ["w","e"],
     startData() { return {
         unlocked: false,
         points: new Decimal(0),
@@ -23,10 +23,12 @@ addLayer("p", {
     }, // Prestige currency exponent
     gainMult() { // Calculate the multiplier for main currency from bonuses
         mult = new Decimal(1)
+        mult = mult.mul(tmp["et"].getEffect["pl"])
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
-        return new Decimal(0.1)
+        let exp = new Decimal(0.1)
+        return exp
     },
     softcap() {
         return new Decimal(1e5)
@@ -36,10 +38,11 @@ addLayer("p", {
     },
     row: 2, // Row the layer is in on the tree (0 is the first row)
     hotkeys: [
-        {key: "p", description: "P: Reset for stars", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
+        {key: "p", description: "P: Reset for planets", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
     layerShown(){
         if(hasUpgrade("inf", 44)) player[this.layer].shown = true
+        if(player["et"].shown) player[this.layer].shown = true
         return player[this.layer].shown
     },
     upgrades: {
@@ -90,5 +93,11 @@ addLayer("p", {
         let gen = new Decimal(0)
         if(hasUpgrade("p", 14)) gen = gen.add(0.01)
         return gen
-    }
+    },
+    doReset(resettingLayer) {
+        if(layers[resettingLayer].row == "side" || layers[resettingLayer].row <= this.row) return
+        let keep = []
+        if((resettingLayer == "et") && hasUpgrade(resettingLayer, 42)) keep.push("upgrades")
+        layerDataReset(this.layer, keep)
+    },
 })

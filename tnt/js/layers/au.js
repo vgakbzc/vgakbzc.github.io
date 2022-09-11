@@ -9,6 +9,7 @@ addLayer("au", {
         npProductDecrease: false,
         autoRow2: [false, false, false, false],
         autoRow2Upgrade: [false, false, false, false],
+        autoS: false
     }},
     color: "#42f971",
     type: "none",
@@ -56,7 +57,7 @@ addLayer("au", {
                 else return {"background-color": "#af5f5f", "color": "black"}
             },
             unlocked() {
-                return hasMilestone("f", 0)
+                return hasMilestone("f", 0) || hasUpgrade("et", 14)
             }
         },
         21: {
@@ -77,7 +78,7 @@ addLayer("au", {
                 else return {"background-color": "#af5f5f", "color": "black"}
             },
             unlocked() {
-                return hasUpgrade("inf", 21)
+                return hasUpgrade("inf", 21) || hasUpgrade("et", 21)
             }
         },
         22: {
@@ -98,7 +99,7 @@ addLayer("au", {
                 else return {"background-color": "#af5f5f", "color": "black"}
             },
             unlocked() {
-                return hasUpgrade("inf", 22)
+                return hasUpgrade("inf", 22) || hasUpgrade("et", 21)
             }
         },
         23: {
@@ -119,7 +120,7 @@ addLayer("au", {
                 else return {"background-color": "#af5f5f", "color": "black"}
             },
             unlocked() {
-                return hasUpgrade("inf", 23)
+                return hasUpgrade("inf", 23) || hasUpgrade("et", 21)
             }
         },
         24: {
@@ -140,7 +141,7 @@ addLayer("au", {
                 else return {"background-color": "#af5f5f", "color": "black"}
             },
             unlocked() {
-                return hasUpgrade("inf", 24)
+                return hasUpgrade("inf", 24) || hasUpgrade("et", 21)
             }
         },
         31: {
@@ -225,6 +226,27 @@ addLayer("au", {
             },
             unlocked() {
                 return hasUpgrade("inf", 34)
+            }
+        },
+        41: {
+            display() {
+                let tmpString = "Auto buy S upgrades.<br>Currently: "
+                if(player[this.layer].autoS) tmpString = tmpString + "On"
+                else tmpString = tmpString + "Off"
+                return tmpString
+            },
+            onClick() {
+                player[this.layer].autoS = !player[this.layer].autoS
+            },
+            canClick() {
+                return true
+            },
+            style() {
+                if(player[this.layer].autoS) return {"background-color": layers["s"].color, "color": "black"}
+                else return {"background-color": "#af5f5f", "color": "black"}
+            },
+            unlocked() {
+                return hasUpgrade("et", 33)
             }
         },
     }

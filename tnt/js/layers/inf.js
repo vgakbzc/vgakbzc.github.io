@@ -26,6 +26,7 @@ addLayer("inf", {
     }, // Prestige currency exponent
     gainMult() { // Calculate the multiplier for main currency from bonuses
         mult = new Decimal(1)
+        if(hasUpgrade("et", 31)) mult = mult.mul(10)
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -38,6 +39,7 @@ addLayer("inf", {
         {key: "i", description: "I: Reset for infinity points", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
     layerShown(){
+        if(player["et"].shown) player[this.layer].shown = true
         return player[this.layer].shown
     },
     checkIfInfinity(){
@@ -100,6 +102,7 @@ addLayer("inf", {
             description : "Auto reset for ap.",
             cost() {
                 let cost = new Decimal(3)
+                if(hasUpgrade("et", 21)) cost = new Decimal(0)
                 return cost
             },
             unlocked() {
@@ -110,6 +113,7 @@ addLayer("inf", {
             description : "Auto reset for fp.",
             cost() {
                 let cost = new Decimal(3)
+                if(hasUpgrade("et", 21)) cost = new Decimal(0)
                 return cost
             },
             unlocked() {
@@ -120,6 +124,7 @@ addLayer("inf", {
             description : "Auto reset for ep.",
             cost() {
                 let cost = new Decimal(3)
+                if(hasUpgrade("et", 21)) cost = new Decimal(0)
                 return cost
             },
             unlocked() {
@@ -130,6 +135,7 @@ addLayer("inf", {
             description : "Auto reset for wp.",
             cost() {
                 let cost = new Decimal(5)
+                if(hasUpgrade("et", 21)) cost = new Decimal(0)
                 return cost
             },
             unlocked() {
@@ -186,7 +192,14 @@ addLayer("inf", {
                 return hasUpgrade(this.layer, 31) && hasUpgrade(this.layer, 32) && hasUpgrade(this.layer, 33) && hasUpgrade(this.layer, 34)
             },
             effect() {
-                return (new Decimal("e41")).times((new Decimal(-player[this.layer].resetTime)).exp()).add(1)
+                let base = new Decimal("e41");
+                if(hasUpgrade("et", 44)) {
+                    base = base.mul(1e42);
+                }
+                if(hasAchievement("ac", 83)) {
+                    return base;
+                }
+                return (base).times((new Decimal(-player[this.layer].resetTime)).exp()).add(1)
             },
             effectDisplay() {
                 return "x" + format(upgradeEffect(this.layer, this.id))

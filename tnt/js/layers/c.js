@@ -39,7 +39,8 @@ addLayer("c", {
         else if(hasUpgrade("c", 22)) {
             exp = new Decimal(0.5)
         }
-        return exp.add(buyableEffect("e", 11))
+        exp = exp.add(buyableEffect("e", 11))
+        return exp
     }, // Prestige currency exponent
     gainMult() { // Calculate the multiplier for main currency from bonuses
         mult = new Decimal(1)
@@ -49,9 +50,13 @@ addLayer("c", {
         for(let i = 0; i < 4; i++)if(hasMilestone(tmpp[i], 2)) {
             let eff = (new Decimal(2)).pow(player[tmpp[i]].best)
             if(eff.gt(1e9)) eff = eff.sub(1e9).add(1).pow(0.4).add(1e9)
+            if(eff.gt(1e17) && player["et"].points.gte(2)) {
+                eff = expSoftCap(eff, new Decimal("e17"), 1.5)
+            }
             mult = mult.mul(eff)
         }
         if(hasUpgrade(this.layer, 44)) mult = mult.mul(upgradeEffect(this.layer, 44))
+        mult = mult.mul(tmp["et"].getEffect["cp"])
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -324,11 +329,12 @@ addLayer("c", {
         },
     },
     autoUpgrade() {
-        return hasMilestone("f", 0) && player["au"].autoCp
+        return (hasMilestone("f", 0) || hasUpgrade("et", 14)) && player["au"].autoCp
     },
     passiveGeneration() {
         let gen = new Decimal(0)
         if(hasMilestone("e", 0)) gen = new Decimal(0.02)
+        if(hasUpgrade("et", 32)) gen = gen.add(1)
         if(hasAchievement("ac", 31)) gen = gen.mul(10)
         if(hasUpgrade("s", 14)) gen = gen.add(1e-34)
         return gen
